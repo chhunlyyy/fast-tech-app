@@ -1,8 +1,10 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -12,8 +14,30 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void navigation() {
-    Future.delayed(const Duration(seconds: 2)).whenComplete(() => NavigationHelper.pushReplacement(context, HomeScreen()));
+  final Future<SharedPreferences> _sharedPreferences = SharedPreferences.getInstance();
+
+  //
+
+  Future<bool> _isFirstLogin() async {
+    SharedPreferences sharedPreferences = await _sharedPreferences;
+    bool isFirstLogin = sharedPreferences.getBool("isFirstLogin") == null || sharedPreferences.getBool("isFirstLogin") == false;
+
+    return isFirstLogin;
+  }
+
+  void _navigation() {
+    late bool isFirstLogin;
+    Future.delayed(const Duration(seconds: 2), () async {
+      isFirstLogin = await _isFirstLogin();
+    }).whenComplete(() {
+      NavigationHelper.pushReplacement(context, isFirstLogin ? ChooseLanguageScreen() : HomeScreen());
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -24,8 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Widget _splashScreenBody() {
-    navigation();
-
+    _navigation();
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
