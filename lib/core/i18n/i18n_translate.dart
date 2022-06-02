@@ -9,7 +9,7 @@ typedef TranslateType = String Function(String key, [Map<String, String> options
 
 // I18n Localizations I18NTranslations
 class I18NTranslations {
-  static RegExp exp = new RegExp(r"\{(.*?)\}");
+  static RegExp exp = RegExp(r"\{(.*?)\}");
 
   // localization variables
   final Locale locale;
@@ -55,7 +55,7 @@ class I18NTranslations {
   }
 
   String textLocale(String? text, String? textEn) {
-    if (locale.languageCode == 'km') {
+    if (locale.languageCode != 'en') {
       if (text == null || text.trim().isEmpty) {
         return textEn ?? "";
       } else {
@@ -90,7 +90,7 @@ class _I18NTranslationsDelegate extends LocalizationsDelegate<I18NTranslations> 
   @override
   Future<I18NTranslations> load(Locale locale) async {
     // I18NTranslations class is where the JSON loading actually runs
-    I18NTranslations localizations = new I18NTranslations(locale);
+    I18NTranslations localizations = I18NTranslations(locale);
     await localizations.load();
     return localizations;
   }

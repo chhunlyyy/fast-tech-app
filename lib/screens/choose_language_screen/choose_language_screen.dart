@@ -1,9 +1,12 @@
 import 'package:fast_tech_app/const/assets_const.dart';
+import 'package:fast_tech_app/core/services/i18n_service.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/top_bar.dart';
+import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-
-import '../../const/color_conts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseLanguageScreen extends StatefulWidget {
   const ChooseLanguageScreen({Key? key}) : super(key: key);
@@ -13,6 +16,16 @@ class ChooseLanguageScreen extends StatefulWidget {
 }
 
 class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
+  final Future<SharedPreferences> _sharePreference = SharedPreferences.getInstance();
+  void _onChoose(bool isKhmer) {
+    Future.delayed(Duration.zero, () async {
+      TokenHelper.getInstance().setLogin();
+      TokenHelper.getInstance().setLanguageCode(isKhmer ? 'km' : 'en');
+      I18nService.changeLanguage(context, isKhmer ? 'km' : 'en');
+      NavigationHelper.pushReplacement(context, const HomeScreen());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -63,35 +76,35 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
       ]),
     );
   }
-}
 
-Widget _buidlButton(bool isKhmer) {
-  return Container(
-    width: double.infinity,
-    height: 100,
-    color: isKhmer ? Colors.red.shade300 : const Color.fromARGB(255, 37, 51, 113).withOpacity(.8),
-    child: Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {},
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              isKhmer ? AssetsConst.CAMBODAI_FLAG : AssetsConst.UNITEDK_INDOM_FLAG,
-              width: 80,
-              height: 50,
-              fit: BoxFit.cover,
-            ),
-            const SizedBox(width: 50),
-            Text(
-              isKhmer ? "ភាសាខ្មែរ" : "English",
-              style: const TextStyle(color: Colors.white, fontSize: 25),
-            )
-          ],
+  Widget _buidlButton(bool isKhmer) {
+    return Container(
+      width: double.infinity,
+      height: 100,
+      color: isKhmer ? Colors.red.shade300 : const Color.fromARGB(255, 37, 51, 113).withOpacity(.8),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: (() => _onChoose(isKhmer)),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                isKhmer ? AssetsConst.CAMBODAI_FLAG : AssetsConst.UNITEDK_INDOM_FLAG,
+                width: 55,
+                height: 35,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(width: 50),
+              Text(
+                isKhmer ? "ភាសាខ្មែរ" : "English",
+                style: const TextStyle(color: Colors.white, fontSize: 25),
+              )
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

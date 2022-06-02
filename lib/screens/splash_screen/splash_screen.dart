@@ -1,10 +1,12 @@
 import 'package:fast_tech_app/const/color_conts.dart';
+import 'package:fast_tech_app/core/models/i18n_model.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,24 +16,29 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final Future<SharedPreferences> _sharedPreferences = SharedPreferences.getInstance();
-
   //
 
-  Future<bool> _isFirstLogin() async {
-    SharedPreferences sharedPreferences = await _sharedPreferences;
-    bool isFirstLogin = sharedPreferences.getBool("isFirstLogin") == null || sharedPreferences.getBool("isFirstLogin") == false;
-
-    return isFirstLogin;
-  }
-
   void _navigation() {
-    late bool isFirstLogin;
-    Future.delayed(const Duration(seconds: 2), () async {
-      isFirstLogin = await _isFirstLogin();
-    }).whenComplete(() {
-      NavigationHelper.pushReplacement(context, isFirstLogin ? ChooseLanguageScreen() : HomeScreen());
-    });
+    Future.delayed(const Duration(seconds: 2)).whenComplete(() => {
+          if (TokenHelper.getInstance().isFirstLogin())
+            {
+              NavigationHelper.pushReplacement(
+                context,
+                const ChooseLanguageScreen(),
+              )
+            }
+          else
+            {
+              Future.delayed(Duration.zero, () {
+                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                  context.read<I18nModel>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
+                });
+              }).whenComplete(() => NavigationHelper.pushReplacement(
+                    context,
+                    const HomeScreen(),
+                  ))
+            }
+        });
   }
 
   @override
