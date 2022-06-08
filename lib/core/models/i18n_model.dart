@@ -8,6 +8,4 @@ class I18nModel with ChangeNotifier {
     languageCode = code;
     notifyListeners();
   }
-
-  static Iterable<Locale> supportedLocales() => supportedLanguagesCodes.map<Locale>((language) => Locale(language, ""));
 }

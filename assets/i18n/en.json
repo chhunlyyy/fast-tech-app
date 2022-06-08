@@ -1,1 +1,7 @@
-{}
+{
+    "choose_language": "Choose Language",
+    "search": "search",
+    "product_type": "Product Type",
+    "electronic_device": "Electronic Devices",
+    "camera_device": "Cameara Devices"
+}

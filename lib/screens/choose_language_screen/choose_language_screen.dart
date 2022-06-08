@@ -6,17 +6,16 @@ import 'package:fast_tech_app/screens/choose_language_screen/top_bar.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseLanguageScreen extends StatefulWidget {
-  const ChooseLanguageScreen({Key? key}) : super(key: key);
+  final bool hasContext;
+  const ChooseLanguageScreen({Key? key, required this.hasContext}) : super(key: key);
 
   @override
   State<ChooseLanguageScreen> createState() => _ChooseLanguageScreenState();
 }
 
 class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
-  final Future<SharedPreferences> _sharePreference = SharedPreferences.getInstance();
   void _onChoose(bool isKhmer) {
     Future.delayed(Duration.zero, () async {
       TokenHelper.getInstance().setLogin();
@@ -37,6 +36,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
     return Stack(
       children: [
         TopBar(),
+        _backButton(),
         Column(
           children: [
             const SizedBox(height: 50),
@@ -106,5 +106,22 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
         ),
       ),
     );
+  }
+
+  Widget _backButton() {
+    return widget.hasContext
+        ? Positioned(
+            top: 50,
+            left: 20,
+            child: InkWell(
+              onTap: () => Navigator.pop(context),
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          )
+        : const SizedBox.shrink();
   }
 }

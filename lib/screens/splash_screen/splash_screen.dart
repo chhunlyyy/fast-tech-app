@@ -17,14 +17,15 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   //
-
   void _navigation() {
     Future.delayed(const Duration(seconds: 2)).whenComplete(() => {
           if (TokenHelper.getInstance().isFirstLogin())
             {
               NavigationHelper.pushReplacement(
                 context,
-                const ChooseLanguageScreen(),
+                const ChooseLanguageScreen(
+                  hasContext: false,
+                ),
               )
             }
           else
