@@ -1,5 +1,6 @@
 import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../const/color_conts.dart';
@@ -21,8 +22,9 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
         child: Column(
           children: [
             _searchWidget(),
-            _textTypeLabel(),
+            _textLabel(false),
             _productTypeWidget(),
+            _textLabel(true),
             SizedBox(height: _size.height / 9 + 20),
           ],
         ),
@@ -35,65 +37,48 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Row(
         children: [
-          Expanded(
-              child: Stack(
-            children: [
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    I18NTranslations.of(context).text('electronic_device'),
-                    style: const TextStyle(color: Colors.blue),
-                  ),
-                ),
-              ),
-              Positioned(width: 50, height: 50, top: 0, right: 0, child: Image.asset(AssetsConst.ELECTRONIC_ICON)),
-            ],
-          )),
+          _buildProductTypeButton(true),
           const SizedBox(width: 10),
-          Expanded(
-              child: Stack(
-            children: [
-              Container(
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    I18NTranslations.of(context).text('camera_device'),
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ),
-              ),
-              Positioned(width: 50, height: 50, top: 0, right: 0, child: Image.asset(AssetsConst.CAMERA_ICON)),
-            ],
-          )),
+          _buildProductTypeButton(false),
         ],
       ),
     );
   }
 
-  Widget _textTypeLabel() {
+  Widget _buildProductTypeButton(bool isElectronic) {
+    return Expanded(
+        child: Stack(
+      children: [
+        Container(
+          height: 120,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isElectronic ? Colors.blue : Colors.black,
+            ),
+          ),
+          child: Center(
+            child: Text(
+              I18NTranslations.of(context).text(isElectronic ? 'electronic_device' : 'camera_device'),
+              style: TextStyle(color: isElectronic ? Colors.blue : Colors.black),
+            ),
+          ),
+        ),
+        Positioned(width: 50, height: 50, top: 0, right: 0, child: Image.asset(isElectronic ? AssetsConst.ELECTRONIC_ICON : AssetsConst.CAMERA_ICON)),
+      ],
+    ));
+  }
+
+  Widget _textLabel(bool isAllProducts) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.all(10),
           child: Text(
-            I18NTranslations.of(context).text('product_type'),
-            style: TextStyle(color: ColorsConts.primaryColor, fontSize: 20),
+            I18NTranslations.of(context).text(isAllProducts ? 'all_products' : 'product_type'),
+            style: TextStyle(color: ColorsConts.primaryColor, fontSize: 16),
           ),
         ),
         Container(
@@ -106,28 +91,42 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
   }
 
   Widget _searchWidget() {
-    return Container(
-      padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-      margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
-      width: _size.width,
-      height: 75,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(1000),
-        border: Border.all(
-          color: Colors.grey.withOpacity(.2),
-        ),
-      ),
-      child: TextFormField(
-        decoration: InputDecoration(
-            border: InputBorder.none,
-            prefixIcon: const Icon(
-              Icons.search,
-              size: 30,
-              color: Colors.black,
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+            margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 5),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(1000),
+              border: Border.all(
+                color: Colors.grey.withOpacity(.2),
+              ),
             ),
-            hintText: I18NTranslations.of(context).text('search')),
-      ),
+            child: TextFormField(
+              decoration: InputDecoration(
+                  border: InputBorder.none,
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    size: 30,
+                    color: Colors.black,
+                  ),
+                  hintText: I18NTranslations.of(context).text('search')),
+            ),
+          ),
+        ),
+        CustomeAnimatedButton(
+          title: I18NTranslations.of(context).text('search'),
+          onTap: () {},
+          isShowShadow: true,
+          width: 100,
+          hegith: 40,
+          backgroundColor: Colors.blue,
+          radius: 10,
+        ),
+        const SizedBox(width: 5),
+      ],
     );
   }
 }

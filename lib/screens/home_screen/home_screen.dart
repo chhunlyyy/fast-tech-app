@@ -10,7 +10,7 @@ import 'package:fast_tech_app/screens/home_screen/home_screen_components/user_sc
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-enum DASBOARD_ENUM { HOMESCREEEN, CART, USER }
+enum DASBOARD_ENUM { homeScreen, cart, user }
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Color _backgroundColor = const Color(0xffFAF9FE);
   late Size _size;
 
-  DASBOARD_ENUM _dasboard_enum = DASBOARD_ENUM.HOMESCREEEN;
+  DASBOARD_ENUM dashboardEnum = DASBOARD_ENUM.homeScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +36,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _homeScreenWidget() {
     Widget _dashboard = Container();
-    switch (_dasboard_enum) {
-      case DASBOARD_ENUM.HOMESCREEEN:
+    switch (dashboardEnum) {
+      case DASBOARD_ENUM.homeScreen:
         _dashboard = const HomeScreenDashboardComponents();
         break;
-      case DASBOARD_ENUM.CART:
+      case DASBOARD_ENUM.cart:
         _dashboard = const CartScreenDashboardComponent();
         break;
-      case DASBOARD_ENUM.USER:
+      case DASBOARD_ENUM.user:
         _dashboard = const UserScreenDashboardComponent();
         break;
 
@@ -79,24 +79,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 15),
-          child: Column(
-            children: [
-              Center(
-                child: _buildNavigationButton(DASBOARD_ENUM.HOMESCREEEN),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildNavigationButton(DASBOARD_ENUM.USER),
-                    _buildNavigationButton(DASBOARD_ENUM.CART),
-                  ],
+          padding: const EdgeInsets.only(top: 10),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildNavigationButton(DASBOARD_ENUM.user),
+                Center(
+                  child: Column(
+                    children: [
+                      _buildNavigationButton(DASBOARD_ENUM.homeScreen),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-            ],
+                _buildNavigationButton(DASBOARD_ENUM.cart),
+              ],
+            ),
           ),
         ),
       ),
@@ -109,29 +110,30 @@ class _HomeScreenState extends State<HomeScreen> {
     IconData iconData = Icons.home;
 
     switch (dasboardEnum) {
-      case DASBOARD_ENUM.CART:
+      case DASBOARD_ENUM.cart:
         iconData = Icons.shopping_cart;
         break;
-      case DASBOARD_ENUM.USER:
+      case DASBOARD_ENUM.user:
         iconData = Icons.person;
         break;
       default:
     }
 
-    icon = Container(
+    icon = AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
         width: 50,
         height: 50,
-        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: _dasboard_enum == dasboardEnum ? ColorsConts.primaryColor : Colors.transparent)),
+        decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: dashboardEnum == dasboardEnum ? ColorsConts.primaryColor : Colors.transparent, width: 2)),
         child: Icon(
           iconData,
           size: 30,
-          color: _dasboard_enum == dasboardEnum ? ColorsConts.primaryColor : Colors.black,
+          color: dashboardEnum == dasboardEnum ? ColorsConts.primaryColor : Colors.black,
         ));
 
     return InkWell(
         onTap: () {
           setState(() {
-            _dasboard_enum = dasboardEnum;
+            dashboardEnum = dasboardEnum;
           });
         },
         child: icon);
