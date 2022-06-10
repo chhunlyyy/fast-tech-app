@@ -2,7 +2,9 @@ import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/const/enum.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/components/product_component/product_item.dart';
+import 'package:fast_tech_app/screens/list_product_screen/list_prodcut_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
@@ -155,10 +157,25 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
               color: isElectronic ? Colors.blue : Colors.black,
             ),
           ),
-          child: Center(
-            child: Text(
-              I18NTranslations.of(context).text(isElectronic ? 'electronic_device' : 'camera_device'),
-              style: TextStyle(color: isElectronic ? Colors.blue : Colors.black),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () {
+                  NavigationHelper.push(
+                      context,
+                      ListProductScreen(
+                        isElectronicDevice: isElectronic,
+                      ));
+                },
+                child: Center(
+                  child: Text(
+                    I18NTranslations.of(context).text(isElectronic ? 'electronic_device' : 'camera_device'),
+                    style: TextStyle(color: isElectronic ? Colors.blue : Colors.black),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

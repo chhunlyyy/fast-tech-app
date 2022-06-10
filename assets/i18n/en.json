@@ -3,7 +3,7 @@
     "search": "search",
     "product_type": "Product Type",
     "electronic_device": "Electronic Devices",
-    "camera_device": "Cameara Devices",
+    "camera_device": "Camera Devices",
     "all_products": "All Products",
     "no_data": "No data found",
     "min_qty": "Minimum Quntity",
@@ -11,5 +11,8 @@
     "color": "Color",
     "detail": "Detail",
     "discount": "Discount",
-    "to_cart": "add to cart"
+    "to_cart": "add to cart",
+    "order_as_package": "Order As Package",
+    "minimum_one": "sell minimum 1",
+    "minimum_greater_1": "sell minimum more than 1"
 }
