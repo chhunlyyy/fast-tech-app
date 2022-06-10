@@ -1,6 +1,8 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/components/product_component/product_detail.dart';
 import 'package:fast_tech_app/widget/placholder_image_wdiget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -24,13 +26,11 @@ class ProductItem extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              // NavigationHelper.push(
-              //     context,
-              //     ProductDetail(
-              //       onDispose: onDispose,
-              //       productModel: productModel,
-              //       mainStore: mainStore,
-              //     ));
+              NavigationHelper.push(
+                  context,
+                  ProductDetail(
+                    productModel: productModel,
+                  ));
             },
             child: Column(
               children: [

@@ -63,9 +63,18 @@ class _CustomeAnimatedButtonState extends State<CustomeAnimatedButton> with Sing
     _controller.forward();
   }
 
+  void _onTap() {
+    _controller.forward();
+    Future.delayed(const Duration(milliseconds: 150)).whenComplete(() {
+      _controller.reverse();
+    });
+    widget.onTap();
+
+    print('ontap 123');
+  }
+
   void _onTapUp(TapUpDetails details) {
     _controller.reverse();
-    widget.onTap();
   }
 
   @override
@@ -73,6 +82,7 @@ class _CustomeAnimatedButtonState extends State<CustomeAnimatedButton> with Sing
     _scale = 1 - _controller.value;
 
     return GestureDetector(
+      onTap: _onTap,
       onTapDown: _onTapDown,
       onTapUp: _onTapUp,
       child: Transform.scale(

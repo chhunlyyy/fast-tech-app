@@ -2,7 +2,7 @@ import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/const/enum.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
-import 'package:fast_tech_app/screens/home_screen/home_screen_components/product_item.dart';
+import 'package:fast_tech_app/screens/components/product_component/product_item.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';

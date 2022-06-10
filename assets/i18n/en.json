@@ -5,5 +5,11 @@
     "electronic_device": "Electronic Devices",
     "camera_device": "Cameara Devices",
     "all_products": "All Products",
-    "no_data": "No data found"
+    "no_data": "No data found",
+    "min_qty": "Minimum Quntity",
+    "warranty": "Warranty",
+    "color": "Color",
+    "detail": "Detail",
+    "discount": "Discount",
+    "to_cart": "add to cart"
 }
