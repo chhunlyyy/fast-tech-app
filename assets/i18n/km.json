@@ -4,5 +4,7 @@
     "product_type": "ប្រភេទផលិតផល",
     "electronic_device": "គ្រឿងអេឡិចត្រូនិច",
     "camera_device": "កាមេរាសុវត្ថិភាព",
-    "all_products": "ផលិតផលទាំងអស់"
+    "all_products": "ផលិតផលទាំងអស់",
+    "min_qty": "ចំនួនលក់តិចបំផុត",
+    "no_data": "រកមិនឃើញទិន្នន័យ"
 }

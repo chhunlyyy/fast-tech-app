@@ -4,5 +4,6 @@
     "product_type": "Product Type",
     "electronic_device": "Electronic Devices",
     "camera_device": "Cameara Devices",
-    "all_products": "All Products"
+    "all_products": "All Products",
+    "no_data": "No data found"
 }

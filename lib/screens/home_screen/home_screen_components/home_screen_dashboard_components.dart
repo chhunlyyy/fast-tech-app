@@ -1,7 +1,15 @@
 import 'package:fast_tech_app/const/assets_const.dart';
+import 'package:fast_tech_app/const/enum.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/screens/home_screen/home_screen_components/product_item.dart';
+import 'package:fast_tech_app/services/product_service/product_service.dart';
+import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
+import 'package:fast_tech_app/widget/emtpy_data_widget.dart';
+import 'package:fast_tech_app/widget/grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 import '../../../const/color_conts.dart';
 
@@ -14,22 +22,111 @@ class HomeScreenDashboardComponents extends StatefulWidget {
 
 class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardComponents> {
   late Size _size;
+  List<ProductModel> _productModelList = [];
+  LoadingStatusEnum _loadingStatusEnum = LoadingStatusEnum.loading;
+  int _pageIndex = 0;
+  final int _pageSize = 10;
+
+  void _getAllProducts(bool isRefresh) {
+    try {
+      _pageIndex = isRefresh ? 0 : _pageIndex + 1;
+      //
+      Future.delayed(Duration.zero, () async {
+        await productService.getAllProduct(pageSize: _pageSize, pageIndex: _pageIndex).then((value) {
+          setState(() {
+            if (isRefresh) {
+              _loadingStatusEnum = LoadingStatusEnum.loading;
+              _productModelList.clear();
+              _productModelList = value;
+            } else {
+              _productModelList.addAll(value);
+            }
+          });
+        }).whenComplete(() {
+          setState(() {
+            _loadingStatusEnum = LoadingStatusEnum.done;
+          });
+        });
+      });
+    } catch (e) {
+      _loadingStatusEnum = LoadingStatusEnum.error;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getAllProducts(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Expanded(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _searchWidget(),
-            _textLabel(false),
-            _productTypeWidget(),
-            _textLabel(true),
-            SizedBox(height: _size.height / 9 + 20),
+        child: Material(
+      child: EasyRefresh(
+        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+        onLoad: (() async {
+          _getAllProducts(false);
+        }),
+        onRefresh: () {
+          return Future.delayed(Duration.zero, (() {
+            _getAllProducts(true);
+          }));
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              key: UniqueKey(),
+              child: SizedBox(
+                child: Column(children: [
+                  _searchWidget(),
+                  _textLabel(false),
+                  _productTypeWidget(),
+                ]),
+              ),
+            ),
+
+            //
+            //tabbar
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              toolbarHeight: 40,
+              backgroundColor: const Color(0xffFAF9FE),
+              pinned: true,
+              title: Container(margin: const EdgeInsets.only(bottom: 15), alignment: Alignment.centerLeft, child: _textLabel(true)),
+            ),
+            SliverFillRemaining(
+              child: _listAllProductWidget(),
+            ),
           ],
         ),
       ),
-    );
+    ));
+  }
+
+  Widget _listAllProductWidget() {
+    Widget content = Container();
+    if (_productModelList.isNotEmpty) {
+      setState(() {
+        content = GridViewWidget.gridView(
+            context: context,
+            children: List<Widget>.generate(_productModelList.length, (index) {
+              return GridTile(
+                  child: AnimationWidget.animation(
+                      index,
+                      ProductItem(
+                        productModel: _productModelList[index],
+                      )));
+            }));
+      });
+    } else if (_loadingStatusEnum == LoadingStatusEnum.done || _loadingStatusEnum == LoadingStatusEnum.error) {
+      setState(() {
+        content = EmptyDataWidget.emptyDataWidget(context);
+      });
+    }
+
+    return content;
   }
 
   Widget _productTypeWidget() {
@@ -95,7 +192,7 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
       children: [
         Expanded(
           child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 5),
             decoration: BoxDecoration(
               color: Colors.white,
