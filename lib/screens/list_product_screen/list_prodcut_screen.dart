@@ -27,14 +27,24 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
   List<ProductModel> _productModelList = [];
   LoadingStatusEnum _loadingStatusEnum = LoadingStatusEnum.loading;
   int _pageIndex = 0;
+
+  int _tabIndex = 0;
   final int _pageSize = 10;
 
-  void _getAllProducts(bool isRefresh) {
+  void _getAllProducts(bool isRefresh, {int isMinQtyOne = 1}) {
     try {
       _pageIndex = isRefresh ? 0 : _pageIndex + 1;
       //
       Future.delayed(Duration.zero, () async {
-        await productService.getAllProduct(pageSize: _pageSize, pageIndex: _pageIndex, isGetCameraProduct: _isElectronic ? 0 : 1, isGetElectronicProduct: _isElectronic ? 1 : 0).then((value) {
+        await productService
+            .getAllProduct(
+          isMinQtyOne: isMinQtyOne,
+          pageSize: _pageSize,
+          pageIndex: _pageIndex,
+          isGetCameraProduct: _isElectronic ? 0 : 1,
+          isGetElectronicProduct: _isElectronic ? 1 : 0,
+        )
+            .then((value) {
           setState(() {
             if (isRefresh) {
               _loadingStatusEnum = LoadingStatusEnum.loading;
@@ -82,11 +92,11 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
     return EasyRefresh(
       header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
       onLoad: (() async {
-        _getAllProducts(false);
+        _getAllProducts(false, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
       }),
       onRefresh: () {
         return Future.delayed(Duration.zero, (() {
-          _getAllProducts(true);
+          _getAllProducts(true, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
         }));
       },
       child: CustomScrollView(
@@ -103,20 +113,17 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
             pinned: true,
             floating: true,
             title: TabBar(
+              indicatorColor: Colors.transparent,
+              onTap: (index) {
+                setState(() {
+                  _tabIndex = index;
+                  _getAllProducts(true, isMinQtyOne: index == 0 ? 1 : 0);
+                });
+              },
               controller: _tabController,
               tabs: [
-                Expanded(
-                  child: Text(
-                    I18NTranslations.of(context).text('minimum_one'),
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    I18NTranslations.of(context).text('minimum_greater_1'),
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                ),
+                _buildTabTitle(true, 0),
+                _buildTabTitle(false, 1),
               ],
             ),
           ),
@@ -125,6 +132,20 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
             _listAllProductWidget(),
             _listAllProductWidget(),
           ])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabTitle(bool isFirst, int index) {
+    return Center(
+      child: Column(
+        children: [
+          Text(
+            I18NTranslations.of(context).text(isFirst ? 'minimum_one' : 'minimum_greater_1'),
+            style: TextStyle(color: _tabIndex == index ? ColorsConts.primaryColor : Colors.grey),
+          ),
+          Container(height: 1, color: _tabIndex == index ? ColorsConts.primaryColor : Colors.transparent),
         ],
       ),
     );

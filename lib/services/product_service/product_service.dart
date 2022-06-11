@@ -5,9 +5,21 @@ import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
 
 class ProductService {
-  Future<List<ProductModel>> getAllProduct({int pageSize = 10, int pageIndex = 0, int isGetCameraProduct = 0, int isGetElectronicProduct = 0}) async {
+  Future<List<ProductModel>> getAllProduct({
+    int pageSize = 10,
+    int pageIndex = 0,
+    int isGetCameraProduct = 0,
+    int isGetElectronicProduct = 0,
+    int isMinQtyOne = 1,
+  }) async {
     try {
-      Map<String, dynamic> params = {'pageSize': pageSize, 'pageIndex': pageIndex, 'isGetCameraProduct': isGetCameraProduct, 'isGetElectronicProduct': isGetElectronicProduct};
+      Map<String, dynamic> params = {
+        'pageSize': pageSize,
+        'pageIndex': pageIndex,
+        'isGetCameraProduct': isGetCameraProduct,
+        'isGetElectronicProduct': isGetElectronicProduct,
+        'isMinQtyOne': isMinQtyOne,
+      };
       return await httpApiService.get(HttpApi.API_PRODUCT, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));
       });
