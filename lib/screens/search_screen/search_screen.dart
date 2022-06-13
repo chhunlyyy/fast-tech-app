@@ -92,11 +92,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                 ),
               ),
-              Expanded(child: SearchWidget.searchWidget(context, () {}, widget.textEditingController)),
+              Expanded(
+                  child: SearchWidget.searchWidget(context, () {
+                _getAllProducts(true);
+              }, widget.textEditingController)),
             ],
           ),
           Expanded(
               child: EasyRefresh(
+            header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
             onLoad: (() async {
               _getAllProducts(false);
             }),
