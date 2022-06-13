@@ -69,8 +69,6 @@ class _CustomeAnimatedButtonState extends State<CustomeAnimatedButton> with Sing
       _controller.reverse();
     });
     widget.onTap();
-
-    print('ontap 123');
   }
 
   void _onTapUp(TapUpDetails details) {

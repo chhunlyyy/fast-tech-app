@@ -5,11 +5,12 @@ import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/components/product_component/product_item.dart';
 import 'package:fast_tech_app/screens/list_product_screen/list_prodcut_screen.dart';
+import 'package:fast_tech_app/screens/search_screen/search_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
-import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/emtpy_data_widget.dart';
 import 'package:fast_tech_app/widget/grid_view.dart';
+import 'package:fast_tech_app/widget/search_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 
@@ -26,6 +27,7 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
   late Size _size;
   List<ProductModel> _productModelList = [];
   LoadingStatusEnum _loadingStatusEnum = LoadingStatusEnum.loading;
+  final TextEditingController _textEditingController = TextEditingController();
   int _pageIndex = 0;
   final int _pageSize = 10;
 
@@ -82,7 +84,19 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
               key: UniqueKey(),
               child: SizedBox(
                 child: Column(children: [
-                  _searchWidget(),
+                  SearchWidget.searchWidget(
+                    context,
+                    () {
+                      if (_textEditingController.text.isNotEmpty) {
+                        NavigationHelper.push(
+                            context,
+                            SearchScreen(
+                              textEditingController: _textEditingController,
+                            ));
+                      }
+                    },
+                    _textEditingController,
+                  ),
                   _textLabel(false),
                   _productTypeWidget(),
                 ]),
@@ -200,46 +214,6 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
           height: 2,
           color: Colors.white,
         )
-      ],
-    );
-  }
-
-  Widget _searchWidget() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            margin: const EdgeInsets.symmetric(vertical: 25, horizontal: 5),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(1000),
-              border: Border.all(
-                color: Colors.grey.withOpacity(.2),
-              ),
-            ),
-            child: TextFormField(
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 30,
-                    color: Colors.black,
-                  ),
-                  hintText: I18NTranslations.of(context).text('search')),
-            ),
-          ),
-        ),
-        CustomeAnimatedButton(
-          title: I18NTranslations.of(context).text('search'),
-          onTap: () {},
-          isShowShadow: true,
-          width: 100,
-          hegith: 40,
-          backgroundColor: Colors.blue,
-          radius: 10,
-        ),
-        const SizedBox(width: 5),
       ],
     );
   }

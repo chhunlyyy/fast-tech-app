@@ -57,7 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
           width: _size.width,
           height: _size.height,
           child: Column(
-            children: [const SizedBox(height: 30), _headerWidget(), _dashboard],
+            children: [
+              const SizedBox(height: 30),
+              _headerWidget(),
+              const SizedBox(height: 5),
+              _dashboard,
+            ],
           ),
         ),
         _navigationBarWidget(),

@@ -115,9 +115,11 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
             title: TabBar(
               indicatorColor: Colors.transparent,
               onTap: (index) {
-                setState(() {
-                  _tabIndex = index;
-                  _getAllProducts(true, isMinQtyOne: index == 0 ? 1 : 0);
+                Future.delayed(const Duration(milliseconds: 100)).whenComplete(() {
+                  setState(() {
+                    _tabIndex = index;
+                    _getAllProducts(true, isMinQtyOne: index == 0 ? 1 : 0);
+                  });
                 });
               },
               controller: _tabController,

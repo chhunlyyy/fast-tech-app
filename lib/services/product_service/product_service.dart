@@ -27,6 +27,25 @@ class ProductService {
       return [];
     }
   }
+
+  Future<List<ProductModel>> search({
+    int pageSize = 10,
+    int pageIndex = 0,
+    String productName = '',
+  }) async {
+    try {
+      Map<String, dynamic> params = {
+        'pageSize': pageSize,
+        'pageIndex': pageIndex,
+        'product_name': productName,
+      };
+      return await httpApiService.get(HttpApi.API_SEARCH, params, Options(headers: HttpConfig.headers)).then((value) {
+        return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));
+      });
+    } catch (e) {
+      return [];
+    }
+  }
 }
 
 ProductService productService = ProductService();
