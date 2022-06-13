@@ -81,7 +81,6 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              key: UniqueKey(),
               child: SizedBox(
                 child: Column(children: [
                   SearchWidget.searchWidget(

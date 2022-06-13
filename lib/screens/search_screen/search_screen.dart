@@ -65,6 +65,7 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _buildBody(),
     );
   }
