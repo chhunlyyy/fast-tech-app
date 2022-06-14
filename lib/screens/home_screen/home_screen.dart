@@ -84,25 +84,22 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, bottom: 30),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildNavigationButton(DASBOARD_ENUM.user),
-                Center(
-                  child: Column(
-                    children: [
-                      _buildNavigationButton(DASBOARD_ENUM.homeScreen),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 15, top: 5),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildNavigationButton(DASBOARD_ENUM.user),
+              Center(
+                child: Column(
+                  children: [
+                    _buildNavigationButton(DASBOARD_ENUM.homeScreen),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-                _buildNavigationButton(DASBOARD_ENUM.cart),
-              ],
-            ),
+              ),
+              _buildNavigationButton(DASBOARD_ENUM.cart),
+            ],
           ),
         ),
       ),

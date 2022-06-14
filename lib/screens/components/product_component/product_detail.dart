@@ -4,6 +4,7 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/widget/add_to_cart_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/show_full_scren_image_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
@@ -428,9 +429,12 @@ class _ProductDetailState extends State<ProductDetail> {
 
   Widget _addToCartWidget() {
     return Container(
+      margin: const EdgeInsets.only(bottom: 10),
       child: CustomeAnimatedButton(
         title: I18NTranslations.of(context).text('to_cart'),
-        onTap: () {},
+        onTap: () {
+          AddToCartBottomSheet().show(context, widget.productModel);
+        },
         isShowShadow: true,
         width: MediaQuery.of(context).size.width - 20,
         hegith: 50,

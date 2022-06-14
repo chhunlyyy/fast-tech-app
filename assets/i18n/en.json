@@ -14,5 +14,9 @@
     "to_cart": "add to cart",
     "order_as_package": "Order As Package",
     "minimum_one": "sell minimum 1",
-    "minimum_greater_1": "sell minimum more than 1"
+    "minimum_greater_1": "sell minimum more than 1",
+    "choose_color": "Choose Color",
+    "total_price": "Total Price",
+    "choose_qty": "Choose Quantity",
+    "buy_now": "Buy Now"
 }

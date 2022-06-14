@@ -14,5 +14,9 @@
     "to_cart": "ដាក់ក្នុងកន្ត្រក",
     "order_as_package": "ដាក់កាមេរ៉ាសុវត្ថិភាពជាកញ្ចប់",
     "minimum_one": "លក់ទិចបំផុត 1",
-    "minimum_greater_1": "លក់ទិចបំផុតលើសពី 1"
+    "minimum_greater_1": "លក់ទិចបំផុតលើសពី 1",
+    "choose_color": "ជ្រើសរើសពណ៌",
+    "total_price": "តម្លៃសរុប",
+    "choose_qty": "ជ្រើសរើសចំនួន",
+    "buy_now": "ទិញឥលូវ"
 }
