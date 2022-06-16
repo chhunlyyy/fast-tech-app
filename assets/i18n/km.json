@@ -18,5 +18,16 @@
     "choose_color": "ជ្រើសរើសពណ៌",
     "total_price": "តម្លៃសរុប",
     "choose_qty": "ជ្រើសរើសចំនួន",
-    "buy_now": "ទិញឥលូវ"
+    "buy_now": "ទិញឥលូវ",
+    "please_log_in": "សូមធ្វើការចូលក្នុងប្រព័ន្ធ",
+    "to_login_screen": "ទៅកាន់ស្គ្រីនចូលប្រព័ន្ធ",
+    "phone_number": "លេខទូរស័ព្ទ",
+    "password": "ពាក្យសម្ងាត់",
+    "login": "ចូល",
+    "user_name": "ឈ្មោះអ្នកប្រើប្រាស់",
+    "create_account": "បង្កើតគណនី",
+    "create": "បង្កើត",
+    "dont_have_account_yet": "មិនទាន់មានគណនីមែនទេ?",
+    "click_here": "ចុចទីនេះ",
+    "input_all_fields": "សូមបំពេញពត៌មានទាំងអស់"
 }

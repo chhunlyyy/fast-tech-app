@@ -18,7 +18,7 @@ class ChooseLanguageScreen extends StatefulWidget {
 class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
   void _onChoose(bool isKhmer) {
     Future.delayed(Duration.zero, () async {
-      TokenHelper.getInstance().setLogin();
+      TokenHelper.getInstance().setFirstLogin();
       TokenHelper.getInstance().setLanguageCode(isKhmer ? 'km' : 'en');
       I18nService.changeLanguage(context, isKhmer ? 'km' : 'en');
       NavigationHelper.pushReplacement(context, const HomeScreen());

@@ -16,12 +16,21 @@ class TokenHelper {
     _instance = TokenHelper._(pref, packageInfo);
   }
 
+  bool isLogedIn() {
+    bool isLogedIn = pref.getBool("isLogedIn") != null && pref.getBool("isLogedIn") == true;
+    return isLogedIn;
+  }
+
+  void setLogedIn(bool isLogedIn) {
+    pref.setBool('isLogedIn', isLogedIn);
+  }
+
   bool isFirstLogin() {
     bool isFirstLogin = pref.getBool("isFirstLogin") == null;
     return isFirstLogin;
   }
 
-  void setLogin() {
+  void setFirstLogin() {
     pref.setBool('isFirstLogin', false);
   }
 

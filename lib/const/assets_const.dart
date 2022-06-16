@@ -5,4 +5,6 @@ class AssetsConst {
 
   static String CAMERA_ICON = "assets/images/camera-icon.png";
   static String ELECTRONIC_ICON = "assets/images/electronic-icon.jpeg";
+
+  static String USER_LOGIN_LOTTIE = "assets/lottie/user-login-lottie.json";
 }

@@ -1,5 +1,5 @@
 import 'package:fast_tech_app/const/color_conts.dart';
-import 'package:fast_tech_app/core/models/i18n_model.dart';
+import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
             {
               Future.delayed(Duration.zero, () {
                 WidgetsBinding.instance?.addPostFrameCallback((_) {
-                  context.read<I18nModel>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
+                  context.read<I18nProvider>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
                 });
               }).whenComplete(() => NavigationHelper.pushReplacement(
                     context,
