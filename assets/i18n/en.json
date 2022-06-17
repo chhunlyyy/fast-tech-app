@@ -29,5 +29,8 @@
     "create": "Create",
     "dont_have_account_yet": "Do you have an account ?",
     "click_here": "Click here",
-    "input_all_fields": "Pleas input all fields"
+    "input_all_fields": "Pleas input all fields",
+    "is_buying": "Product in buying process",
+    "done_buying": "Product aleady bought",
+    "logout": "Logout"
 }

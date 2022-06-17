@@ -8,7 +8,8 @@ import 'components/cancel_button.dart';
 import 'components/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen();
+  final bool fromLogout;
+  const LoginScreen({required this.fromLogout});
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -64,19 +65,21 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   top: -50,
                   left: -50,
                   child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 50),
-                      child: GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: const Center(
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            size: 35,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
+                    child: !widget.fromLogout
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 50),
+                            child: GestureDetector(
+                              onTap: () => Navigator.pop(context),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.arrow_back_ios,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                     width: 180,
                     height: 180,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: kPrimaryColor),

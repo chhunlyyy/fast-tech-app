@@ -29,5 +29,8 @@
     "create": "បង្កើត",
     "dont_have_account_yet": "មិនទាន់មានគណនីមែនទេ?",
     "click_here": "ចុចទីនេះ",
-    "input_all_fields": "សូមបំពេញពត៌មានទាំងអស់"
+    "input_all_fields": "សូមបំពេញពត៌មានទាំងអស់",
+    "is_buying": "ផលិតផលកំពុងដាក់ទិញ",
+    "done_buying": "ផលិតផលបានទិញរួចរាល់",
+    "logout": "ចាកចេញ"
 }
