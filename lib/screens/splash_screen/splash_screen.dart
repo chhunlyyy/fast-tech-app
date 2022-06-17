@@ -1,9 +1,12 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/provider/i18n_provider.dart';
+import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
+import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +19,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  //
+
+  void checkUser() {
+    Future.delayed(Duration.zero, () async {
+      String token = await DeviceInfoHelper.getDivceId();
+      await userService.getUser(token: token).then((value) {
+        if (value != null) {
+          Provider.of<UserModelProvider>(context, listen: false).setUserModel(value);
+        }
+      });
+    });
+  }
+
   //
   void _navigation() {
     Future.delayed(const Duration(seconds: 2)).whenComplete(() => {
@@ -46,6 +62,10 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    if (TokenHelper.getInstance().isLogedIn()) {
+      checkUser();
+    }
   }
 
   @override
