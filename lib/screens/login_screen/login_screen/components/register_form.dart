@@ -62,10 +62,9 @@ class RegisterForm extends StatelessWidget {
           await userService.register(params: params).then(((value) {
             if (value['status'].toString() == '200') {
               _onReisterSuccess(UserModel.fromJson(value['user']));
-            } else if (value['status'].toString() == '422') {
-              DialogWidget.show(context, I18NTranslations.of(context).text('phone_used'), dialogType: DialogType.ERROR);
             } else {
-              DialogWidget.show(context, I18NTranslations.of(context).text('problem_regiseter'), dialogType: DialogType.ERROR);
+              DialogWidget.show(context, I18NTranslations.of(context).text(value['status'].toString() == '422' ? 'phone_used' : 'problem_regiseter'),
+                  dialogType: value['status'].toString() == '422' ? DialogType.WARNING : DialogType.ERROR);
             }
           }));
         });

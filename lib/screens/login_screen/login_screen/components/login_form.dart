@@ -1,10 +1,19 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/core/models/user_model.dart';
+import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/helper/token_helper.dart';
+import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/screens/login_screen/components/rounded_input.dart';
 import 'package:fast_tech_app/screens/login_screen/components/rounded_password_input.dart';
+import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
+import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -27,9 +36,30 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void _onLoginSuccess(UserModel userModel) {
+    DialogWidget.show(context, I18NTranslations.of(context).text('login_success'), dialogType: DialogType.SUCCES);
+    Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+      TokenHelper.getInstance().setLogedIn(true);
+      Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
+      NavigationHelper.pushReplacement(context, const HomeScreen());
+    });
+  }
+
   void _onLogin() {
     Future.delayed(Duration.zero, () async {
-      if (_phoneController.text.isEmpty || _passwordController.text.isEmpty) {}
+      if (_phoneController.text.isEmpty || _passwordController.text.isEmpty) {
+        DialogWidget.show(context, I18NTranslations.of(context).text('input_all_fields'), dialogType: DialogType.WARNING);
+      } else {
+        Map<String, dynamic> params = {'phone': _phoneController.text, 'password': _passwordController.text};
+        await userService.login(params: params).then((value) {
+          if (value['status'] == '200') {
+            _onLoginSuccess(UserModel.fromJson(value['user']));
+          } else {
+            DialogWidget.show(context, I18NTranslations.of(context).text(value['status'].toString() == '422' ? 'wrong_username' : 'login_failt'),
+                dialogType: value['status'].toString() == '422' ? DialogType.WARNING : DialogType.ERROR);
+          }
+        });
+      }
     });
   }
 

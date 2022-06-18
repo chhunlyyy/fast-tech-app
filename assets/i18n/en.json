@@ -32,5 +32,8 @@
     "input_all_fields": "Pleas input all fields",
     "is_buying": "Product in buying process",
     "done_buying": "Product aleady bought",
-    "logout": "Logout"
+    "logout": "Logout",
+    "wrong_username": "Wrong Username and Password",
+    "login_failt": "Login Failt",
+    "login_success": "Lgin Successfully"
 }

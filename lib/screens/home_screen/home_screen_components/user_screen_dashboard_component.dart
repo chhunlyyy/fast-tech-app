@@ -21,6 +21,15 @@ class UserScreenDashboardComponent extends StatefulWidget {
 class _UserScreenDashboardComponentState extends State<UserScreenDashboardComponent> {
   late UserModel? _userModel;
 
+  void _onLogout() {
+    TokenHelper.getInstance().setLogedIn(false);
+    NavigationHelper.pushReplacement(
+        context,
+        const LoginScreen(
+          fromLogout: true,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     _userModel = Provider.of<UserModelProvider>(context).userModel;
@@ -47,14 +56,10 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: CustomeAnimatedButton(
         title: I18NTranslations.of(context).text('logout'),
-        onTap: () => NavigationHelper.pushReplacement(
-            context,
-            const LoginScreen(
-              fromLogout: true,
-            )),
+        onTap: _onLogout,
         isShowShadow: true,
         width: MediaQuery.of(context).size.width,
-        hegith: 60,
+        hegith: 50,
         backgroundColor: Colors.red,
       ),
     );
