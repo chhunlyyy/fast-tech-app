@@ -35,5 +35,10 @@
     "logout": "Logout",
     "wrong_username": "Wrong Username and Password",
     "login_failt": "Login Failt",
-    "login_success": "Lgin Successfully"
+    "login_success": "Lgin Successfully",
+    "add_to_cart_success": "Add To Cart Successfully",
+    "add_to_cart_failt": "Add To Cart Unsuccessfully",
+    "plz_choose_color": "Please Choose Color",
+    "continou_buying": "Continou Buying",
+    "go_to_cart": "Go to cart"
 }

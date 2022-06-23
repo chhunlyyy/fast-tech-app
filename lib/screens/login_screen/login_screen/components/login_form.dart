@@ -3,6 +3,7 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
@@ -41,7 +42,11 @@ class _LoginFormState extends State<LoginForm> {
     Future.delayed(const Duration(seconds: 2)).whenComplete(() {
       TokenHelper.getInstance().setLogedIn(true);
       Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
-      NavigationHelper.pushReplacement(context, const HomeScreen());
+      NavigationHelper.pushReplacement(
+          context,
+          const HomeScreen(
+            dasboardEnum: DASBOARD_ENUM.user,
+          ));
     });
   }
 
@@ -50,7 +55,8 @@ class _LoginFormState extends State<LoginForm> {
       if (_phoneController.text.isEmpty || _passwordController.text.isEmpty) {
         DialogWidget.show(context, I18NTranslations.of(context).text('input_all_fields'), dialogType: DialogType.WARNING);
       } else {
-        Map<String, dynamic> params = {'phone': _phoneController.text, 'password': _passwordController.text};
+        String token = await DeviceInfoHelper.getDivceId();
+        Map<String, dynamic> params = {'phone': _phoneController.text, 'password': _passwordController.text, 'token': token};
         await userService.login(params: params).then((value) {
           if (value['status'] == '200') {
             _onLoginSuccess(UserModel.fromJson(value['user']));

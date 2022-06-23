@@ -1,11 +1,18 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/core/models/user_model.dart';
+import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
+import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class AddToCartBottomSheet {
   void show(BuildContext context, ProductModel productModel) {
@@ -36,6 +43,34 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
   ColorModel? _seletedColor;
   late int _qty;
 
+  late UserModel _userModel;
+
+  void _onAddToCart() {
+    if (_seletedColor == null) {
+      DialogWidget.show(context, I18NTranslations.of(context).text('plz_choose_color'), dialogType: DialogType.WARNING, onOkPress: () {});
+    } else {
+      Future.delayed(Duration.zero, () async {
+        await orderService.addToCart(widget.productModel.id, _userModel.id, _qty, _seletedColor!.id).then((value) {
+          DialogWidget.show(
+            context,
+            value == '200' ? I18NTranslations.of(context).text('add_to_cart_success') : I18NTranslations.of(context).text('add_to_cart_failt'),
+            dialogType: value == '200' ? DialogType.SUCCES : DialogType.ERROR,
+            btnCancelText: I18NTranslations.of(context).text('continou_buying'),
+            btnOkText: I18NTranslations.of(context).text('go_to_cart'),
+            onCancelPress: () {
+              Future.delayed(const Duration(milliseconds: 400)).whenComplete(() => Navigator.pop(context));
+            },
+            onOkPress: () => NavigationHelper.push(
+                context,
+                const HomeScreen(
+                  dasboardEnum: DASBOARD_ENUM.cart,
+                )),
+          );
+        });
+      });
+    }
+  }
+
   void _onQtyChange(bool isPlus) {
     if (isPlus) {
       setState(() {
@@ -61,6 +96,7 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
 
   @override
   Widget build(BuildContext context) {
+    _userModel = Provider.of<UserModelProvider>(context).userModel!;
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -106,7 +142,12 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
   Widget _buildActionButton(bool isBuy) {
     return CustomeAnimatedButton(
       title: I18NTranslations.of(context).text(isBuy ? 'buy_now' : 'to_cart'),
-      onTap: () {},
+      onTap: () {
+        if (isBuy) {
+        } else {
+          _onAddToCart();
+        }
+      },
       isShowShadow: true,
       width: MediaQuery.of(context).size.width / 2.1,
       hegith: 50,

@@ -52,7 +52,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 });
               }).whenComplete(() => NavigationHelper.pushReplacement(
                     context,
-                    const HomeScreen(),
+                    const HomeScreen(
+                      dasboardEnum: DASBOARD_ENUM.homeScreen,
+                    ),
                   ))
             }
         });

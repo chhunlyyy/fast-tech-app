@@ -13,7 +13,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 enum DASBOARD_ENUM { homeScreen, cart, user }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final DASBOARD_ENUM dasboardEnum;
+  const HomeScreen({Key? key, required this.dasboardEnum}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -23,7 +24,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final Color _backgroundColor = const Color(0xffFAF9FE);
   late Size _size;
 
-  DASBOARD_ENUM dashboardEnum = DASBOARD_ENUM.homeScreen;
+  late DASBOARD_ENUM dashboardEnum;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dashboardEnum = widget.dasboardEnum;
+  }
 
   @override
   Widget build(BuildContext context) {

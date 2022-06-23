@@ -1,5 +1,5 @@
 import 'package:fast_tech_app/const/assets_const.dart';
-import 'package:fast_tech_app/core/services/i18n_service.dart';
+import 'package:fast_tech_app/services/i18n_service/i18n_service.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/top_bar.dart';
@@ -21,7 +21,11 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
       TokenHelper.getInstance().setFirstLogin();
       TokenHelper.getInstance().setLanguageCode(isKhmer ? 'km' : 'en');
       I18nService.changeLanguage(context, isKhmer ? 'km' : 'en');
-      NavigationHelper.pushReplacement(context, const HomeScreen());
+      NavigationHelper.pushReplacement(
+          context,
+          const HomeScreen(
+            dasboardEnum: DASBOARD_ENUM.homeScreen,
+          ));
     });
   }
 

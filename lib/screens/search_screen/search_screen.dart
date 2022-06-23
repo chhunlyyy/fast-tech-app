@@ -84,7 +84,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 padding: const EdgeInsets.only(left: 10),
                 child: GestureDetector(
                   onTap: (() {
-                    NavigationHelper.pushReplacement(context, const HomeScreen());
+                    NavigationHelper.pushReplacement(
+                        context,
+                        const HomeScreen(
+                          dasboardEnum: DASBOARD_ENUM.homeScreen,
+                        ));
                   }),
                   child: Icon(
                     Icons.arrow_back_ios,

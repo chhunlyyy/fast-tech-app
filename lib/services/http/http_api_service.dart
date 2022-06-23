@@ -5,7 +5,7 @@ class HttpApiService {
   // base_url
 
   var url = 'http://192.168.43.44:8000/api'; // set local host
-  // var url = 'http://192.168.70.112:8000/api'; // set local host
+  // var url = 'http://192.168.70.210:8001/api'; // set local host
 
   ///
   final Dio _dio = Dio(BaseOptions(
