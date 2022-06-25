@@ -43,5 +43,9 @@
     "go_to_cart": "Go to cart",
     "your_cart": "Your cart has products",
     "cart_total": "Cart Total",
-    "charge": "charge"
+    "charge": "charge",
+    "do_you_want_to_delete_cart": "Do you want to remove this product fom cart?",
+    "ok": "ok",
+    "cancel": "cancel",
+    "error_remove_cart": "Error remove from cart"
 }

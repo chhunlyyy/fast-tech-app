@@ -32,6 +32,17 @@ class OrderService {
       return [];
     }
   }
+
+  Future<String> removeCart(int cartId) async {
+    try {
+      Map<String, dynamic> params = {'id': cartId};
+      return await httpApiService.post(HttpApi.API_REMOVE_CART, null, params, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data[0]['status'];
+      });
+    } catch (e) {
+      return '400';
+    }
+  }
 }
 
 OrderService orderService = OrderService();

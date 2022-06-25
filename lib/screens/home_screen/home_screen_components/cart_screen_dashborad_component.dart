@@ -1,7 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
+import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,35 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
   late Size _size;
 
   late List<CartModel> _cartModelList;
+
+  void _getCart(int userId) {
+    Future.delayed(Duration.zero, () async {
+      await orderService.getProductInCart(userId).then((value) => {
+            Provider.of<CartModelProvider>(context, listen: false).setCartModel(value),
+          });
+    });
+  }
+
+  void _onRemoveCart(int cartId, int userId) {
+    DialogWidget.show(
+      context,
+      I18NTranslations.of(context).text('do_you_want_to_delete_cart'),
+      dialogType: DialogType.QUESTION,
+      btnOkText: I18NTranslations.of(context).text('ok'),
+      btnCancelText: I18NTranslations.of(context).text('cancel'),
+      onOkPress: () {
+        orderService.removeCart(cartId).then((value) {
+          if (value != '200') {
+            DialogWidget.show(context, 'error_remove_cart', dialogType: DialogType.ERROR, onOkPress: () {});
+          } else {
+            _getCart(userId);
+          }
+        });
+      },
+      onCancelPress: () {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
@@ -169,19 +200,22 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
             _qtyWidget(cartModel),
           ]),
         ),
-        _removeCartWidget(),
+        _removeCartWidget(cartModel.id, cartModel.userId),
       ],
     );
   }
 
-  Widget _removeCartWidget() {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration: const BoxDecoration(color: Color(0xffFAF9FE), shape: BoxShape.circle),
-      child: const Icon(
-        Icons.close,
-        color: Colors.red,
+  Widget _removeCartWidget(int cartId, int userId) {
+    return InkWell(
+      onTap: (() => _onRemoveCart(cartId, userId)),
+      child: Container(
+        width: 30,
+        height: 30,
+        decoration: const BoxDecoration(color: Color(0xffFAF9FE), shape: BoxShape.circle),
+        child: const Icon(
+          Icons.close,
+          color: Colors.red,
+        ),
       ),
     );
   }
