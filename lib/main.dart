@@ -1,4 +1,5 @@
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
@@ -30,6 +31,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => I18nProvider()),
         ChangeNotifierProvider(create: (_) => UserModelProvider()),
+        ChangeNotifierProvider(create: (_) => CartModelProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

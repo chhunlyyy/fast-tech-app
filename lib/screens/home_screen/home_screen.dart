@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
+import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
@@ -9,6 +10,7 @@ import 'package:fast_tech_app/screens/home_screen/home_screen_components/home_sc
 import 'package:fast_tech_app/screens/home_screen/home_screen_components/user_screen_dashboard_component.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 enum DASBOARD_ENUM { homeScreen, cart, user }
 
@@ -106,7 +108,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              _buildNavigationButton(DASBOARD_ENUM.cart),
+              Stack(
+                children: [
+                  Positioned(
+                    right: 15,
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                      child: Text(
+                        Provider.of<CartModelProvider>(context).cartModelList.length.toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  _buildNavigationButton(DASBOARD_ENUM.cart),
+                ],
+              ),
             ],
           ),
         ),

@@ -40,5 +40,8 @@
     "add_to_cart_failt": "Add To Cart Unsuccessfully",
     "plz_choose_color": "Please Choose Color",
     "continou_buying": "Continou Buying",
-    "go_to_cart": "Go to cart"
+    "go_to_cart": "Go to cart",
+    "your_cart": "Your cart has products",
+    "cart_total": "Cart Total",
+    "charge": "charge"
 }

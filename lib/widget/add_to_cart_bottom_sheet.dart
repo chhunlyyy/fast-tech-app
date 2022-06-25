@@ -3,6 +3,7 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
+import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
@@ -45,12 +46,22 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
 
   late UserModel _userModel;
 
+  void _getCart() {
+    Future.delayed(Duration.zero, () async {
+      await orderService.getProductInCart(_userModel.id).then((value) => {
+            Provider.of<CartModelProvider>(context, listen: false).setCartModel(value),
+          });
+    });
+  }
+
   void _onAddToCart() {
     if (_seletedColor == null) {
       DialogWidget.show(context, I18NTranslations.of(context).text('plz_choose_color'), dialogType: DialogType.WARNING, onOkPress: () {});
     } else {
       Future.delayed(Duration.zero, () async {
         await orderService.addToCart(widget.productModel.id, _userModel.id, _qty, _seletedColor!.id).then((value) {
+          _getCart();
+
           DialogWidget.show(
             context,
             value == '200' ? I18NTranslations.of(context).text('add_to_cart_success') : I18NTranslations.of(context).text('add_to_cart_failt'),

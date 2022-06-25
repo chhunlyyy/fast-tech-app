@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
+import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
@@ -9,6 +10,7 @@ import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/screens/login_screen/components/rounded_input.dart';
 import 'package:fast_tech_app/screens/login_screen/components/rounded_password_input.dart';
+import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
@@ -37,11 +39,18 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  void getCart(int userId) {
+    Future.delayed(Duration.zero, () async {
+      await orderService.getProductInCart(userId).then((value) => {Provider.of<CartModelProvider>(context, listen: false).setCartModel(value)});
+    });
+  }
+
   void _onLoginSuccess(UserModel userModel) {
     DialogWidget.show(context, I18NTranslations.of(context).text('login_success'), dialogType: DialogType.SUCCES);
     Future.delayed(const Duration(seconds: 2)).whenComplete(() {
       TokenHelper.getInstance().setLogedIn(true);
       Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
+      getCart(userModel.id);
       NavigationHelper.pushReplacement(
           context,
           const HomeScreen(

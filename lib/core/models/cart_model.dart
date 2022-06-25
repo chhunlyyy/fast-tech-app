@@ -1,7 +1,4 @@
-// To parse this JSON data, do
-//
-//     final cartModel = cartModelFromJson(jsonString);
-
+import 'package:fast_tech_app/core/models/product_model.dart';
 import 'dart:convert';
 
 CartModel cartModelFromJson(String str) => CartModel.fromJson(json.decode(str));
@@ -13,6 +10,7 @@ class CartModel {
     required this.id,
     required this.productId,
     required this.userId,
+    required this.colorId,
     required this.qty,
     required this.product,
   });
@@ -20,23 +18,26 @@ class CartModel {
   int id;
   int productId;
   int userId;
+  int colorId;
   int qty;
-  List<Product> product;
+  Product product;
 
   factory CartModel.fromJson(Map<String, dynamic> json) => CartModel(
         id: json["id"],
         productId: json["product_id"],
         userId: json["user_id"],
+        colorId: json["color_id"],
         qty: json["qty"],
-        product: List<Product>.from(json["product"].map((x) => Product.fromJson(x))),
+        product: Product.fromJson(json["product"]),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "product_id": productId,
         "user_id": userId,
+        "color_id": colorId,
         "qty": qty,
-        "product": List<dynamic>.from(product.map((x) => x.toJson())),
+        "product": product.toJson(),
       };
 }
 
@@ -52,6 +53,9 @@ class Product {
     required this.warrantyPeriod,
     required this.minQty,
     required this.isCamera,
+    required this.colors,
+    required this.images,
+    required this.details,
   });
 
   int id;
@@ -64,6 +68,9 @@ class Product {
   String warrantyPeriod;
   int minQty;
   int isCamera;
+  List<ColorModel> colors;
+  List<ImageModel> images;
+  List<DetailModel> details;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
@@ -76,6 +83,9 @@ class Product {
         warrantyPeriod: json["warranty_period"],
         minQty: json["min_qty"],
         isCamera: json["is_camera"],
+        colors: List<ColorModel>.from(json["colors"].map((x) => ColorModel.fromJson(x))),
+        images: List<ImageModel>.from(json["images"].map((x) => ImageModel.fromJson(x))),
+        details: List<DetailModel>.from(json["details"].map((x) => DetailModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -89,5 +99,8 @@ class Product {
         "warranty_period": warrantyPeriod,
         "min_qty": minQty,
         "is_camera": isCamera,
+        "colors": List<dynamic>.from(colors.map((x) => x.toJson())),
+        "images": List<dynamic>.from(images.map((x) => x.toJson())),
+        "details": List<dynamic>.from(details.map((x) => x.toJson())),
       };
 }
