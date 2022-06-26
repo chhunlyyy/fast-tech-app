@@ -51,6 +51,7 @@ class _LoginFormState extends State<LoginForm> {
       TokenHelper.getInstance().setLogedIn(true);
       Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
       getCart(userModel.id);
+
       NavigationHelper.pushReplacement(
           context,
           const HomeScreen(

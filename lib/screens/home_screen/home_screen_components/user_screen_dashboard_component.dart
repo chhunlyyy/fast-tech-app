@@ -5,6 +5,7 @@ import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
+import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -43,7 +44,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         _userNameWidget(),
         const SizedBox(height: 50),
         _line(),
-        _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () {}),
+        _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen())),
         _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () {}),
         const SizedBox(height: 50),
         _logoutButton(),
@@ -68,33 +69,40 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
   Widget _buildBotton(String i18nString, IconData iconData, Color color, Function onTap) {
     return SizedBox(
       height: 70,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(),
-          Row(
+      child: Material(
+        child: InkWell(
+          onTap: () {
+            onTap();
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(width: 10),
-              Icon(
-                iconData,
-                color: color,
+              Container(),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Icon(
+                    iconData,
+                    color: color,
+                  ),
+                  const SizedBox(width: 30),
+                  Text(
+                    I18NTranslations.of(context).text(i18nString),
+                    style: TextStyle(color: color),
+                  ),
+                  const Expanded(
+                      child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.grey,
+                          ))),
+                ],
               ),
-              const SizedBox(width: 30),
-              Text(
-                I18NTranslations.of(context).text(i18nString),
-                style: TextStyle(color: color),
-              ),
-              const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.grey,
-                      ))),
+              _line(),
             ],
           ),
-          _line(),
-        ],
+        ),
       ),
     );
   }

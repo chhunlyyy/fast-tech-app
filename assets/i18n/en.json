@@ -49,5 +49,11 @@
     "cancel": "cancel",
     "error_remove_cart": "Error remove from cart",
     "pick_up": "Pick up",
-    "delivery": "Delivery"
+    "delivery": "Delivery",
+    "order_success": "Order Successfully",
+    "qty": "qty",
+    "buying": "buying",
+    "confirm": "seller confirmed",
+    "deliverying": "deliverying",
+    "done": "done"
 }
