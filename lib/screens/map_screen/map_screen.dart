@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:fast_tech_app/const/color_conts.dart';
+import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -86,7 +88,8 @@ class _MapScreenState extends State<MapScreen> {
     return Material(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Map'),
+          backgroundColor: ColorsConts.primaryColor,
+          title: Text(I18NTranslations.of(context).text('map')),
         ),
         body: _currentLocation == null
             ? const Center(

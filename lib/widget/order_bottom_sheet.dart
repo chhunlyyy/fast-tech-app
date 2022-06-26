@@ -5,6 +5,7 @@ import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/map_screen/user_map.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
@@ -55,6 +56,7 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
 
   void _onTap(bool isDelivery) {
     if (isDelivery) {
+      NavigationHelper.push(context, const UserMapScreen());
     } else {
       if (widget.cartModelList!.isEmpty) {
         widget.params!['delivery_type'] = 0;

@@ -55,5 +55,7 @@
     "buying": "buying",
     "confirm": "seller confirmed",
     "deliverying": "deliverying",
-    "done": "done"
+    "done": "done",
+    "current_locatoin": "Current Location",
+    "map": "Map"
 }
