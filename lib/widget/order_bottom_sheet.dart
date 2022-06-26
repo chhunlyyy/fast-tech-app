@@ -39,14 +39,58 @@ class OrderBottomSheetBody extends StatefulWidget {
 }
 
 class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
-  void _onOrder(Map<String, dynamic> params) {
+  void _onTap(bool isDelivery) {
+    if (isDelivery) {
+      _buttonDeliveryClick();
+    } else {
+      _buttonPickupClick();
+    }
+  }
+
+  void _buttonPickupClick() {
+    if (widget.cartModelList!.isEmpty) {
+      widget.params!['delivery_type'] = 0;
+      _onOrderPickup(widget.params!);
+    } else {
+      try {
+        _onAdPickupOrderFromChargeScreeen();
+      } catch (e) {
+        DialogWidget.show(context, I18NTranslations.of(context).text('order_error'), dialogType: DialogType.ERROR);
+      }
+    }
+  }
+
+  void _buttonDeliveryClick() {
+    NavigationHelper.push(context, UserMapScreen(
+      location: (location) {
+        if (widget.cartModelList!.isEmpty) {
+          widget.params!['delivery_type'] = 1;
+          widget.params!['latitude'] = location.latitude;
+          widget.params!['longitude'] = location.longitude;
+          _onDeliveryOrder(widget.params!);
+        } else {
+          try {
+            _onAdDeliveryOrderFromChargeScreeen(location.latitude, location.longitude);
+          } catch (e) {
+            DialogWidget.show(context, I18NTranslations.of(context).text('order_error'), dialogType: DialogType.ERROR);
+          }
+        }
+      },
+    ));
+  }
+
+  void _onOrderPickup(Map<String, dynamic> params) {
     orderService.order(params).then((value) {
       if (value == '200') {
         DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
         Future.delayed(const Duration(seconds: 2)).whenComplete(() {
           Navigator.pop(context);
           Navigator.pop(context);
-          NavigationHelper.push(context, const OrderingScreen());
+          NavigationHelper.push(
+              context,
+              const OrderingScreen(
+                index: 1,
+              ));
         });
       } else {
         DialogWidget.show(context, I18NTranslations.of(context).text('order_error'), dialogType: DialogType.ERROR);
@@ -54,44 +98,79 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
     });
   }
 
-  void _onTap(bool isDelivery) {
-    if (isDelivery) {
-      NavigationHelper.push(context, const UserMapScreen());
-    } else {
-      if (widget.cartModelList!.isEmpty) {
-        widget.params!['delivery_type'] = 0;
-        _onOrder(widget.params!);
-      } else {
-        try {
-          for (var cartModel in widget.cartModelList!) {
-            Map<String, dynamic> params = {
-              'user_id': Provider.of<UserModelProvider>(context, listen: false).userModel!.id,
-              'product_id': cartModel.productId,
-              'color_id': cartModel.colorId,
-              'qty': cartModel.qty,
-              'delivery_type': 0,
-              'status': 0,
-              'is_buy_from_cart': 0,
-              'address_id_ref': const Uuid().v4(),
-            };
-            orderService.order(params);
-          }
-          DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
-
-          Future.delayed(const Duration(seconds: 2)).whenComplete(() {
-            Future.delayed(const Duration(milliseconds: 300)).whenComplete(() {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            }).whenComplete(() {
-              getCart(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
-              NavigationHelper.push(context, const OrderingScreen());
-            });
-          });
-        } catch (e) {
-          DialogWidget.show(context, I18NTranslations.of(context).text('order_error'), dialogType: DialogType.ERROR);
-        }
-      }
+  void _onAdPickupOrderFromChargeScreeen() {
+    for (var cartModel in widget.cartModelList!) {
+      Map<String, dynamic> params = {
+        'user_id': Provider.of<UserModelProvider>(context, listen: false).userModel!.id,
+        'product_id': cartModel.productId,
+        'color_id': cartModel.colorId,
+        'qty': cartModel.qty,
+        'delivery_type': 0,
+        'status': 0,
+        'is_buy_from_cart': 0,
+        'address_id_ref': const Uuid().v4(),
+      };
+      orderService.order(params);
     }
+    DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
+
+    Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+      Future.delayed(const Duration(milliseconds: 300)).whenComplete(() {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }).whenComplete(() {
+        getCart(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
+        NavigationHelper.push(context, const OrderingScreen(index: 1));
+      });
+    });
+  }
+
+  void _onDeliveryOrder(Map<String, dynamic> params) {
+    orderService.deliveryOrder(params).then((value) {
+      if (value == '200') {
+        DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
+        Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+          Navigator.pop(context);
+          Navigator.pop(context);
+          NavigationHelper.push(
+              context,
+              const OrderingScreen(
+                index: 0,
+              ));
+        });
+      } else {
+        DialogWidget.show(context, I18NTranslations.of(context).text('order_error'), dialogType: DialogType.ERROR);
+      }
+    });
+  }
+
+  void _onAdDeliveryOrderFromChargeScreeen(double latitude, double longitude) {
+    for (var cartModel in widget.cartModelList!) {
+      Map<String, dynamic> params = {
+        'user_id': Provider.of<UserModelProvider>(context, listen: false).userModel!.id,
+        'product_id': cartModel.productId,
+        'color_id': cartModel.colorId,
+        'qty': cartModel.qty,
+        'delivery_type': 1,
+        'status': 0,
+        'is_buy_from_cart': 0,
+        'address_id_ref': const Uuid().v4(),
+        'latitude': latitude,
+        'longitude': longitude,
+      };
+      orderService.deliveryOrder(params);
+    }
+    DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
+
+    Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+      Future.delayed(const Duration(milliseconds: 300)).whenComplete(() {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }).whenComplete(() {
+        getCart(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
+        NavigationHelper.push(context, const OrderingScreen(index: 0));
+      });
+    });
   }
 
   void getCart(int userId) {

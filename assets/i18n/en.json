@@ -57,5 +57,6 @@
     "deliverying": "deliverying",
     "done": "done",
     "current_locatoin": "Current Location",
-    "map": "Map"
+    "map": "Map",
+    "confirm_location_question": "Do you want us to develivery to this location?"
 }

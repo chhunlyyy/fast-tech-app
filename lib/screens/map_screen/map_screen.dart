@@ -88,7 +88,9 @@ class _MapScreenState extends State<MapScreen> {
     return Material(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: ColorsConts.primaryColor,
+          iconTheme: IconThemeData(color: ColorsConts.primaryColor),
+          backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+          foregroundColor: ColorsConts.primaryColor,
           title: Text(I18NTranslations.of(context).text('map')),
         ),
         body: _currentLocation == null

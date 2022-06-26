@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fast_tech_app/core/models/cart_model.dart';
+import 'package:fast_tech_app/core/models/delivery_order_model.dart';
 import 'package:fast_tech_app/core/models/pickup_order_model.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
@@ -7,6 +8,17 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 import '../http/http_api.dart';
 
 class OrderService {
+  Future<List<DeliveryOrderModel>> getDeliveryOrder(int userID) async {
+    try {
+      Map<String, dynamic> params = {'user_id': userID};
+      return await httpApiService.get(HttpApi.API_DELIVERY_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
+        return List<DeliveryOrderModel>.from(value.data.map((x) => DeliveryOrderModel.fromJson(x)));
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<PickupOrderModel>> getPickupOrder(int userID) async {
     try {
       Map<String, dynamic> params = {'user_id': userID};
@@ -15,6 +27,16 @@ class OrderService {
       });
     } catch (e) {
       return [];
+    }
+  }
+
+  Future<String> deliveryOrder(Map<String, dynamic> params) async {
+    try {
+      return await httpApiService.post(HttpApi.API_DELIVERY_ORDER, null, params, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data[0]['status'];
+      });
+    } catch (e) {
+      return '400';
     }
   }
 

@@ -8,4 +8,5 @@ class HttpApi {
   static const String API_REMOVE_CART = '/remove-cart';
   static const String API_ORDER = '/order';
   static const String API_PICKUP_ORDER = '/pickup-order';
+  static const String API_DELIVERY_ORDER = '/delivery-order';
 }

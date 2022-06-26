@@ -1,5 +1,6 @@
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
+import 'package:fast_tech_app/core/provider/delivery_order_provider.dart';
 import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
@@ -34,6 +35,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => UserModelProvider()),
         ChangeNotifierProvider(create: (_) => CartModelProvider()),
         ChangeNotifierProvider(create: (_) => PickupOrderModelProvider()),
+        ChangeNotifierProvider(create: (_) => DeliveryOrderModelProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,

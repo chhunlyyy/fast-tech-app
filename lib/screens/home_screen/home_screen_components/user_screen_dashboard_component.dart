@@ -44,7 +44,15 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         _userNameWidget(),
         const SizedBox(height: 50),
         _line(),
-        _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen())),
+        _buildBotton(
+            'is_buying',
+            FontAwesomeIcons.spinner,
+            Colors.blue,
+            () => NavigationHelper.push(
+                context,
+                const OrderingScreen(
+                  index: 0,
+                ))),
         _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () {}),
         const SizedBox(height: 50),
         _logoutButton(),

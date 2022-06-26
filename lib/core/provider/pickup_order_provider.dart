@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class PickupOrderModelProvider with ChangeNotifier {
   List<PickupOrderModel> pickupOrderModelList = [];
 
-  void setCartModel(List<PickupOrderModel> models) {
+  void setPickupOrderModel(List<PickupOrderModel> models) {
     pickupOrderModelList = models;
     notifyListeners();
   }

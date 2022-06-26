@@ -1,6 +1,8 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/core/models/delivery_order_model.dart';
 import 'package:fast_tech_app/core/models/pickup_order_model.dart';
+import 'package:fast_tech_app/core/provider/delivery_order_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
@@ -10,7 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class OrderingScreen extends StatefulWidget {
-  const OrderingScreen({Key? key}) : super(key: key);
+  final int index;
+  const OrderingScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   State<OrderingScreen> createState() => _OrderingScreenState();
@@ -19,28 +22,43 @@ class OrderingScreen extends StatefulWidget {
 class _OrderingScreenState extends State<OrderingScreen> {
   late Size _size;
   List<PickupOrderModel> _pickupOrderModelList = [];
+  List<DeliveryOrderModel> _deliveryOrderModelList = [];
   int _statusIndex = 0;
 
   void getPickupOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getPickupOrder(userId).then((value) => {Provider.of<PickupOrderModelProvider>(context, listen: false).setCartModel(value)}).whenComplete(() {
-        setState(() {
-          _pickupOrderModelList = Provider.of<PickupOrderModelProvider>(context, listen: false).pickupOrderModelList;
-        });
+      await orderService.getPickupOrder(userId).then((value) {
+        Provider.of<PickupOrderModelProvider>(context, listen: false).setPickupOrderModel(value);
       });
     });
+  }
+
+  void getDeliveryOrder(int userId) {
+    Future.delayed(Duration.zero, () async {
+      await orderService.getDeliveryOrder(userId).then((value) {
+        Provider.of<DeliveryOrderModelProvider>(context, listen: false).setDeliveryModel(value);
+      });
+    });
+  }
+
+  void _getData() {
+    getPickupOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
+    getDeliveryOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getPickupOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
+    _statusIndex = widget.index;
+    _getData();
   }
 
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
+    _pickupOrderModelList = Provider.of<PickupOrderModelProvider>(context).pickupOrderModelList;
+    _deliveryOrderModelList = Provider.of<DeliveryOrderModelProvider>(context).deliveryOrderModelList;
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -61,12 +79,28 @@ class _OrderingScreenState extends State<OrderingScreen> {
       child: Column(
         children: [
           _switchStatusBarWidget(),
-          Expanded(
-              child: SingleChildScrollView(
-                  child: Column(
-            children: List.generate(_pickupOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
-          )))
+          _statusIndex == 0 ? _listDeliveryOrderWidget() : _listPickupOrderWidget(),
         ],
+      ),
+    );
+  }
+
+  Widget _listDeliveryOrderWidget() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: List.generate(_deliveryOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
+        ),
+      ),
+    );
+  }
+
+  Widget _listPickupOrderWidget() {
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: List.generate(_pickupOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
+        ),
       ),
     );
   }
@@ -113,7 +147,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             },
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                 child: Row(
                   children: [
                     Text(
@@ -125,7 +159,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
                       child: Text(
-                        _pickupOrderModelList.length.toString(),
+                        index == 0 ? _deliveryOrderModelList.length.toString() : _pickupOrderModelList.length.toString(),
                         style: const TextStyle(color: Colors.white),
                       ),
                     )
