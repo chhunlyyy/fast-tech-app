@@ -9,6 +9,7 @@ import 'package:fast_tech_app/helper/order_status_helper.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:provider/provider.dart';
 
 class OrderingScreen extends StatefulWidget {
@@ -87,7 +88,13 @@ class _OrderingScreenState extends State<OrderingScreen> {
 
   Widget _listDeliveryOrderWidget() {
     return Expanded(
-      child: SingleChildScrollView(
+      child: EasyRefresh(
+        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+        onRefresh: () {
+          return Future.delayed(Duration.zero, (() {
+            _getData();
+          }));
+        },
         child: Column(
           children: List.generate(_deliveryOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
         ),
@@ -97,7 +104,13 @@ class _OrderingScreenState extends State<OrderingScreen> {
 
   Widget _listPickupOrderWidget() {
     return Expanded(
-      child: SingleChildScrollView(
+      child: EasyRefresh(
+        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+        onRefresh: () {
+          return Future.delayed(Duration.zero, (() {
+            _getData();
+          }));
+        },
         child: Column(
           children: List.generate(_pickupOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
         ),
