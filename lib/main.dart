@@ -3,7 +3,6 @@ import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
-import 'package:fast_tech_app/screens/map_screen/map_screen.dart';
 import 'package:fast_tech_app/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,8 +35,7 @@ Future<void> main() async {
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        // home: FastTechApp(),
-        home: MapScreen(),
+        home: FastTechApp(),
       ),
     ),
   );

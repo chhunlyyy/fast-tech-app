@@ -10,10 +10,12 @@ import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
+import 'package:fast_tech_app/widget/order_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AddToCartBottomSheet {
   void show(BuildContext context, ProductModel productModel) {
@@ -155,6 +157,24 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
       title: I18NTranslations.of(context).text(isBuy ? 'buy_now' : 'to_cart'),
       onTap: () {
         if (isBuy) {
+          if (_seletedColor == null) {
+            DialogWidget.show(context, I18NTranslations.of(context).text('plz_choose_color'), dialogType: DialogType.WARNING, onOkPress: () {});
+          } else {
+            Map<String, dynamic> params = {
+              'user_id': Provider.of<UserModelProvider>(context, listen: false).userModel!.id,
+              'product_id': widget.productModel.id,
+              'color_id': _seletedColor!.id,
+              'qty': _qty,
+              'delivery_type': 1,
+              'status': 0,
+              'is_buy_from_cart': 1,
+              'address_id_ref': const Uuid().v4(),
+            };
+            Navigator.pop(context);
+            Future.delayed(const Duration(milliseconds: 200)).whenComplete(() {
+              OrderBottomSheet().show(context, [], params);
+            });
+          }
         } else {
           _onAddToCart();
         }

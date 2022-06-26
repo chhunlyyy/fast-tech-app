@@ -5,6 +5,7 @@ import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
+import 'package:fast_tech_app/widget/order_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -64,7 +65,7 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
               const SizedBox(height: 250),
             ],
           ),
-          Positioned(bottom: 0, child: _chargeWidget()),
+          _cartModelList.isEmpty ? const SizedBox.shrink() : Positioned(bottom: 0, child: _chargeWidget()),
         ],
       ),
     );
@@ -123,27 +124,26 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
           Row(
             children: [
               Expanded(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xffFAF9FE)),
-                      color: Colors.blue,
-                    ),
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {},
-                        child: Center(
-                          child: Text(
-                            I18NTranslations.of(context).text('charge'),
-                            style: const TextStyle(color: Colors.white, fontSize: 20),
-                          ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xffFAF9FE)),
+                    color: Colors.blue,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        OrderBottomSheet().show(context, _cartModelList, {});
+                      },
+                      child: Center(
+                        child: Text(
+                          I18NTranslations.of(context).text('charge'),
+                          style: const TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
                     ),
-                    height: 60,
                   ),
+                  height: 60,
                 ),
               ),
               Container(width: 1, height: 60, color: Colors.black),

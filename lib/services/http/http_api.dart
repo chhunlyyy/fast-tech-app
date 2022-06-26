@@ -6,4 +6,5 @@ class HttpApi {
   static const String API_USER = '/user';
   static const String API_CART = '/cart';
   static const String API_REMOVE_CART = '/remove-cart';
+  static const String API_ORDER = '/order';
 }

@@ -6,6 +6,16 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 import '../http/http_api.dart';
 
 class OrderService {
+  Future<String> order(Map<String, dynamic> params) async {
+    try {
+      return await httpApiService.post(HttpApi.API_ORDER, null, params, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data[0]['status'];
+      });
+    } catch (e) {
+      return '400';
+    }
+  }
+
   Future<String> addToCart(int productId, int userId, int qty, int colorId) async {
     try {
       Map<String, dynamic> params = {

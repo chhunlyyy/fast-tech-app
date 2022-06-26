@@ -3,12 +3,15 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/widget/add_to_cart_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/show_full_scren_image_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetail extends StatefulWidget {
   final ProductModel productModel;
@@ -146,13 +149,10 @@ class _ProductDetailState extends State<ProductDetail> {
             height: 60,
             decoration: BoxDecoration(color: Colors.grey.withOpacity(.1), shape: BoxShape.circle),
           ),
-          Expanded(
-              child: Center(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 50),
-              child: Text('', style: TextStyle(color: ColorsConts.primaryColor, fontSize: 22)),
-            ),
-          )),
+          Expanded(child: Container()),
+
+          _cartWidget(),
+
           // isShopOwner
           //     ? AnimatedButton(
           //         borderRadius: BorderRadius.circular(5),
@@ -195,6 +195,44 @@ class _ProductDetailState extends State<ProductDetail> {
           const SizedBox(width: 20),
         ],
       ),
+    );
+  }
+
+  Widget _cartWidget() {
+    return Stack(
+      children: [
+        Container(
+            width: 60,
+            height: 60,
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(1000),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () => NavigationHelper.push(context, const HomeScreen(dasboardEnum: DASBOARD_ENUM.cart)),
+                  child: Icon(
+                    Icons.shopping_cart,
+                    size: 30,
+                    color: ColorsConts.primaryColor,
+                  ),
+                ),
+              ),
+            )),
+        Positioned(
+          right: 15,
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            child: Text(
+              Provider.of<CartModelProvider>(context).cartModelList.length.toString(),
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.red, fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
