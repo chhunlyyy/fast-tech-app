@@ -7,6 +7,7 @@ import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
+import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -96,7 +97,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_deliveryOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
+          children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _buildPickupOrderItem(_pickupOrderModelList[index]))),
         ),
       ),
     );
@@ -112,7 +113,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_pickupOrderModelList.length, (index) => _buildPickupOrderItem(_pickupOrderModelList[index])),
+          children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _buildPickupOrderItem(_pickupOrderModelList[index]))),
         ),
       ),
     );

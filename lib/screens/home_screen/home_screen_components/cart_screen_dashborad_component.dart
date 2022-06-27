@@ -4,6 +4,7 @@ import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
+import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:fast_tech_app/widget/order_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
@@ -183,7 +184,7 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
     return Expanded(
         child: SingleChildScrollView(
       child: Column(
-        children: List.generate(_cartModelList.length, (index) => _buildCartItem(_cartModelList[index])),
+        children: List.generate(_cartModelList.length, (index) => AnimationWidget.animation(index, _buildCartItem(_cartModelList[index]))),
       ),
     ));
   }
