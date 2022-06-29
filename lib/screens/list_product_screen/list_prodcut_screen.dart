@@ -2,7 +2,9 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/const/enum.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/components/product_component/product_item.dart';
+import 'package:fast_tech_app/screens/list_camera_screen/list_camera_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/circular_container.dart';
@@ -177,7 +179,7 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
             Material(
               type: MaterialType.transparency,
               child: InkWell(
-                onTap: () {},
+                onTap: () => NavigationHelper.push(context, const ListCameraScreen()),
               ),
             )
           ],

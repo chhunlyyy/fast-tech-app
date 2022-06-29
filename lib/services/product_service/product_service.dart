@@ -5,6 +5,23 @@ import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
 
 class ProductService {
+  Future<List<ProductModel>> getAllCamera({
+    int pageSize = 10,
+    int pageIndex = 0,
+  }) async {
+    try {
+      Map<String, dynamic> params = {
+        'pageSize': pageSize,
+        'pageIndex': pageIndex,
+      };
+      return await httpApiService.get(HttpApi.API_CAMERA, params, Options(headers: HttpConfig.headers)).then((value) {
+        return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<ProductModel>> getAllProduct({
     int pageSize = 10,
     int pageIndex = 0,

@@ -1,8 +1,10 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/delivery_order_model.dart';
+import 'package:fast_tech_app/core/models/package_order_model.dart';
 import 'package:fast_tech_app/core/models/pickup_order_model.dart';
 import 'package:fast_tech_app/core/provider/delivery_order_provider.dart';
+import 'package:fast_tech_app/core/provider/package_order_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
@@ -25,7 +27,16 @@ class _OrderingScreenState extends State<OrderingScreen> {
   late Size _size;
   List<PickupOrderModel> _pickupOrderModelList = [];
   List<DeliveryOrderModel> _deliveryOrderModelList = [];
+  List<PackageOrderModel> _packageOrderModelList = [];
   int _statusIndex = 0;
+
+  void getPackageOrder(int userId) {
+    Future.delayed(Duration.zero, () async {
+      await orderService.getPackageOrder(userId).then((value) {
+        Provider.of<PackageOrderModelProvider>(context, listen: false).setPackageupOrderModel(value);
+      });
+    });
+  }
 
   void getPickupOrder(int userId) {
     Future.delayed(Duration.zero, () async {
@@ -44,8 +55,10 @@ class _OrderingScreenState extends State<OrderingScreen> {
   }
 
   void _getData() {
-    getPickupOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
-    getDeliveryOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.id);
+    int userId = Provider.of<UserModelProvider>(context, listen: false).userModel!.id;
+    getPickupOrder(userId);
+    getDeliveryOrder(userId);
+    getPackageOrder(userId);
   }
 
   @override
@@ -61,6 +74,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
     _size = MediaQuery.of(context).size;
     _pickupOrderModelList = Provider.of<PickupOrderModelProvider>(context).pickupOrderModelList;
     _deliveryOrderModelList = Provider.of<DeliveryOrderModelProvider>(context).deliveryOrderModelList;
+    _packageOrderModelList = Provider.of<PackageOrderModelProvider>(context).packageOrderModelList;
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -75,14 +89,38 @@ class _OrderingScreenState extends State<OrderingScreen> {
   }
 
   Widget _buildBody() {
+    late Widget content;
+    if (_statusIndex == 0) {
+      content = _listDeliveryOrderWidget();
+    } else if (_statusIndex == 1) {
+      content = _listPickupOrderWidget();
+    } else {
+      content = _listPackageOrderWidget();
+    }
     return SizedBox(
       width: _size.width,
       height: _size.height,
       child: Column(
         children: [
           _switchStatusBarWidget(),
-          _statusIndex == 0 ? _listDeliveryOrderWidget() : _listPickupOrderWidget(),
+          content,
         ],
+      ),
+    );
+  }
+
+  Widget _listPackageOrderWidget() {
+    return Expanded(
+      child: EasyRefresh(
+        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+        onRefresh: () {
+          return Future.delayed(Duration.zero, (() {
+            _getData();
+          }));
+        },
+        child: Column(
+          children: List.generate(_packageOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_packageOrderModelList[index], true))),
+        ),
       ),
     );
   }
@@ -97,7 +135,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _buildPickupOrderItem(_pickupOrderModelList[index]))),
+          children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_deliveryOrderModelList[index], false))),
         ),
       ),
     );
@@ -113,7 +151,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _buildPickupOrderItem(_pickupOrderModelList[index]))),
+          children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_pickupOrderModelList[index], false))),
         ),
       ),
     );
@@ -130,18 +168,35 @@ class _OrderingScreenState extends State<OrderingScreen> {
           color: Colors.grey.withOpacity(.5),
         ),
       ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          _statusItem(0),
-          _statusItem(1),
-        ],
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _statusItem(0),
+            _statusItem(1),
+            _statusItem(2),
+          ],
+        ),
       ),
     );
   }
 
   Widget _statusItem(int index) {
+    late String text;
+    late String qty;
+    if (index == 0) {
+      text = I18NTranslations.of(context).text('delivery');
+      qty = _deliveryOrderModelList.length.toString();
+    } else if (index == 1) {
+      text = I18NTranslations.of(context).text('pick_up');
+      qty = _pickupOrderModelList.length.toString();
+    } else {
+      text = I18NTranslations.of(context).text('package_order');
+      qty = _packageOrderModelList.length.toString();
+    }
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
@@ -165,7 +220,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                 child: Row(
                   children: [
                     Text(
-                      I18NTranslations.of(context).text(index == 1 ? 'pick_up' : 'delivery'),
+                      text,
                       style: TextStyle(color: _statusIndex == index ? Colors.blue : Colors.black),
                     ),
                     const SizedBox(width: 20),
@@ -173,7 +228,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       padding: const EdgeInsets.all(8),
                       decoration: const BoxDecoration(color: Colors.grey, shape: BoxShape.circle),
                       child: Text(
-                        index == 0 ? _deliveryOrderModelList.length.toString() : _pickupOrderModelList.length.toString(),
+                        qty,
                         style: const TextStyle(color: Colors.white),
                       ),
                     )
@@ -187,24 +242,24 @@ class _OrderingScreenState extends State<OrderingScreen> {
     );
   }
 
-  Widget _buildPickupOrderItem(PickupOrderModel pickupOrderModel) {
+  Widget _orderItem(var model, bool isPackageOrder) {
     return Stack(
       children: [
         Container(
           margin: const EdgeInsets.all(8),
           child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _displayImageWidget(pickupOrderModel),
-            _displayNameWidget(pickupOrderModel),
-            _displayPriceWidget(pickupOrderModel),
+            _displayImageWidget(model),
+            _displayNameWidget(model, isPackageOrder),
+            !isPackageOrder ? _displayPriceWidget(model) : const SizedBox.shrink(),
           ]),
         ),
         Positioned(
           bottom: 0,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            color: OrderStatusHelper.getColor(pickupOrderModel.status),
+            color: OrderStatusHelper.getColor(model.status),
             child: Text(
-              I18NTranslations.of(context).text(OrderStatusHelper.getDesc(pickupOrderModel.status)),
+              I18NTranslations.of(context).text(OrderStatusHelper.getDesc(model.status)),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -213,14 +268,14 @@ class _OrderingScreenState extends State<OrderingScreen> {
     );
   }
 
-  Widget _displayPriceWidget(PickupOrderModel pickupOrderModel) {
+  Widget _displayPriceWidget(var model) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(I18NTranslations.of(context).text('qty') + '\t' + pickupOrderModel.qty.toString()),
+        Text(I18NTranslations.of(context).text('qty') + '\t' + model.qty.toString()),
         Text(
-          r'$' + (pickupOrderModel.product.priceAfterDiscount * pickupOrderModel.qty).toString(),
+          r'$' + (model.product.priceAfterDiscount * model.qty).toString(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: ColorsConts.primaryColor),
@@ -229,24 +284,26 @@ class _OrderingScreenState extends State<OrderingScreen> {
     );
   }
 
-  Widget _displayNameWidget(PickupOrderModel pickupOrderModel) {
+  Widget _displayNameWidget(var model, bool isPackageOrder) {
     return Column(
       children: [
-        Text(pickupOrderModel.product.name),
-        Text(
-          I18NTranslations.of(context).text('color') + '\t' + pickupOrderModel.product.colors[0].color,
-          style: const TextStyle(color: Colors.grey),
-        ),
+        Text(model.product.name),
+        !isPackageOrder
+            ? Text(
+                I18NTranslations.of(context).text('color') + '\t' + model.product.colors[0].color,
+                style: const TextStyle(color: Colors.grey),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }
 
-  Widget _displayImageWidget(PickupOrderModel pickupOrderModel) {
+  Widget _displayImageWidget(var model) {
     return SizedBox(
       width: 100,
       height: 100,
       child: DisplayImage(
-        imageString: pickupOrderModel.product.images[0].image,
+        imageString: model.product.images[0].image,
         imageBorderRadius: 5,
         boxFit: BoxFit.cover,
       ),

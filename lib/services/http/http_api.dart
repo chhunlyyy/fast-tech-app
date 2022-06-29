@@ -9,4 +9,6 @@ class HttpApi {
   static const String API_ORDER = '/order';
   static const String API_PICKUP_ORDER = '/pickup-order';
   static const String API_DELIVERY_ORDER = '/delivery-order';
+  static const String API_CAMERA = '/camera';
+  static const String API_PACKAGE_ORDER = '/package-order';
 }

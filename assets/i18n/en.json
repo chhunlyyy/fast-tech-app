@@ -58,5 +58,9 @@
     "done": "done",
     "current_locatoin": "Current Location",
     "map": "Map",
-    "confirm_location_question": "Do you want us to develivery to this location?"
+    "confirm_location_question": "Do you want us to develivery to this location?",
+    "plz_pick_camera": "Please pick a camera",
+    "see_detail": "see detail",
+    "order_error": "order error",
+    "package_order": "package order"
 }
