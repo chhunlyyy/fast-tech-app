@@ -63,5 +63,7 @@
     "see_detail": " មើលលម្អិត",
     "order_error": "មានបញ្ហាក្នុងពេលបញ្ជាទិញ",
     "package_order": "កម្មង់ជាកញ្ចប់",
-    "plz_login": "សូមធ្វើការចូលប្រព័ន្ធជាមុន"
+    "plz_login": "សូមធ្វើការចូលប្រព័ន្ធជាមុន",
+    "phone_used": "Phone Number is already been used",
+    "problem_regiseter": "Error registration"
 }

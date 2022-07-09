@@ -10,6 +10,7 @@ import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
+import 'package:fast_tech_app/widget/empty_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -91,11 +92,11 @@ class _OrderingScreenState extends State<OrderingScreen> {
   Widget _buildBody() {
     late Widget content;
     if (_statusIndex == 0) {
-      content = _listDeliveryOrderWidget();
+      content = _deliveryOrderModelList.isEmpty ? emptyWidget(context: context) : _listDeliveryOrderWidget();
     } else if (_statusIndex == 1) {
-      content = _listPickupOrderWidget();
+      content = _pickupOrderModelList.isEmpty ? emptyWidget(context: context) : _listPickupOrderWidget();
     } else {
-      content = _listPackageOrderWidget();
+      content = _packageOrderModelList.isEmpty ? emptyWidget(context: context) : _listPackageOrderWidget();
     }
     return SizedBox(
       width: _size.width,

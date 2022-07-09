@@ -63,5 +63,8 @@
     "see_detail": "see detail",
     "order_error": "order error",
     "package_order": "package order",
-    "plz_login": "Please Login"
+    "plz_login": "Please Login",
+    "success_register": "Register Successfully",
+    "phone_used": "លេខទូរស័ព្ទមានក្នុងប្រព័ន្ធរួចរាល់",
+    "problem_regiseter": "មានបញ្ហាក្នុងពេលចុះឈ្មោះ"
 }

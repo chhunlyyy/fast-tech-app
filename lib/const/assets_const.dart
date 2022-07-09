@@ -7,4 +7,5 @@ class AssetsConst {
   static String ELECTRONIC_ICON = "assets/images/electronic-icon.jpeg";
 
   static String USER_LOGIN_LOTTIE = "assets/lottie/user-login-lottie.json";
+  static String ANIM_LOTTIE_EMPTYBOX = "assets/lottie/lottie_emptybox.json";
 }
