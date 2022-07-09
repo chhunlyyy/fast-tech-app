@@ -11,4 +11,6 @@ class HttpApi {
   static const String API_DELIVERY_ORDER = '/delivery-order';
   static const String API_CAMERA = '/camera';
   static const String API_PACKAGE_ORDER = '/package-order';
+  static const String API_CHECK_ADMIN = '/admin-user';
+  static const String API_LOG_OUT = '/user-logout';
 }

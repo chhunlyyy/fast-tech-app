@@ -2,10 +2,12 @@ import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
+import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,8 +24,9 @@ class UserScreenDashboardComponent extends StatefulWidget {
 class _UserScreenDashboardComponentState extends State<UserScreenDashboardComponent> {
   late UserModel? _userModel;
 
-  void _onLogout() {
+  Future<void> _onLogout() async {
     TokenHelper.getInstance().setLogedIn(false);
+    userService.logout(_userModel!.phone, await DeviceInfoHelper.getDivceId());
     NavigationHelper.pushReplacement(
         context,
         const LoginScreen(

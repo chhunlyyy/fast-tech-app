@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
+import 'package:fast_tech_app/core/public/public_variable.dart';
 import 'package:fast_tech_app/services/http/http_api.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
@@ -47,6 +48,18 @@ class UserService {
     } catch (e) {
       return {'status': "400"};
     }
+  }
+
+  Future<void> checkAdmin(String phoneNumber) async {
+    Map<String, dynamic> params = {'phone': phoneNumber};
+    await httpApiService.get(HttpApi.API_CHECK_ADMIN, params, Options(headers: HttpConfig.headers)).then((value) {
+      IS_ADMIN = value.data['status'] == '200';
+    });
+  }
+
+  Future<void> logout(String phoneNumber, String token) async {
+    Map<String, dynamic> params = {'phone': phoneNumber, 'token': token};
+    await httpApiService.post(HttpApi.API_LOG_OUT, params, null, Options(headers: HttpConfig.headers));
   }
 }
 
