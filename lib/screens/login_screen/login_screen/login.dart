@@ -8,8 +8,9 @@ import 'components/cancel_button.dart';
 import 'components/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
+  final bool fromAddToCart;
   final bool fromLogout;
-  const LoginScreen({required this.fromLogout});
+  const LoginScreen({Key? key, required this.fromLogout, required this.fromAddToCart}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -110,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
               // Login Form
               LoginForm(
+                fromAddToCart: widget.fromAddToCart,
                 isLogin: isLogin,
                 animationDuration: animationDuration,
                 size: size,

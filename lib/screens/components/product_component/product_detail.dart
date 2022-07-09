@@ -5,9 +5,12 @@ import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
+import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
 import 'package:fast_tech_app/widget/add_to_cart_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
+import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:fast_tech_app/widget/show_full_scren_image_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -471,7 +474,23 @@ class _ProductDetailState extends State<ProductDetail> {
       child: CustomeAnimatedButton(
         title: I18NTranslations.of(context).text('to_cart'),
         onTap: () {
-          AddToCartBottomSheet().show(context, widget.productModel);
+          TokenHelper.getInstance().isLogedIn()
+              ? AddToCartBottomSheet().show(context, widget.productModel)
+              : DialogWidget.show(
+                  context,
+                  I18NTranslations.of(context).text('plz_login'),
+                  onCancelPress: () {},
+                  onOkPress: () => NavigationHelper.push(
+                    context,
+                    const LoginScreen(
+                      fromLogout: false,
+                      fromAddToCart: true,
+                    ),
+                  ),
+                  dialogType: DialogType.INFO,
+                  btnCancelText: I18NTranslations.of(context).text('cancel'),
+                  btnOkText: I18NTranslations.of(context).text('login'),
+                );
         },
         isShowShadow: true,
         width: MediaQuery.of(context).size.width - 20,

@@ -25,11 +25,13 @@ class LoginForm extends StatefulWidget {
     required this.animationDuration,
     required this.size,
     required this.defaultLoginSize,
+    required this.fromAddToCart,
   }) : super(key: key);
   final bool isLogin;
   final Duration animationDuration;
   final Size size;
   final double defaultLoginSize;
+  final bool fromAddToCart;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -52,11 +54,16 @@ class _LoginFormState extends State<LoginForm> {
       Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
       getCart(userModel.id);
 
-      NavigationHelper.pushReplacement(
-          context,
-          const HomeScreen(
-            dasboardEnum: DASBOARD_ENUM.user,
-          ));
+      if (widget.fromAddToCart) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      } else {
+        NavigationHelper.pushReplacement(
+            context,
+            const HomeScreen(
+              dasboardEnum: DASBOARD_ENUM.user,
+            ));
+      }
     });
   }
 

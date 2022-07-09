@@ -62,5 +62,6 @@
     "plz_pick_camera": "Please pick a camera",
     "see_detail": "see detail",
     "order_error": "order error",
-    "package_order": "package order"
+    "package_order": "package order",
+    "plz_login": "Please Login"
 }

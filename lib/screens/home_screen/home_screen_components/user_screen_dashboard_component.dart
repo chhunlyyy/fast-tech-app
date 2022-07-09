@@ -28,6 +28,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         context,
         const LoginScreen(
           fromLogout: true,
+          fromAddToCart: false,
         ));
   }
 
@@ -162,6 +163,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
                 context,
                 const LoginScreen(
                   fromLogout: false,
+                  fromAddToCart: false,
                 )),
             isShowShadow: true,
             backgroundColor: Colors.blue,
