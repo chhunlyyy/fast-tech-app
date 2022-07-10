@@ -2,11 +2,13 @@ import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/core/public/public_variable.dart';
 import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
+import 'package:fast_tech_app/screens/permission_setting_screen/permission_setting_screen.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
@@ -48,16 +50,9 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         _userNameWidget(),
         const SizedBox(height: 50),
         _line(),
-        _buildBotton(
-            'is_buying',
-            FontAwesomeIcons.spinner,
-            Colors.blue,
-            () => NavigationHelper.push(
-                context,
-                const OrderingScreen(
-                  index: 0,
-                ))),
+        _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen(index: 0))),
         _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () {}),
+        IS_SUPER_ADMIN ? _buildBotton('permission_setting', FontAwesomeIcons.key, Colors.deepPurple, () => NavigationHelper.push(context, const PermissionSettingScreen())) : const SizedBox.shrink(),
         const SizedBox(height: 50),
         _logoutButton(),
       ]),

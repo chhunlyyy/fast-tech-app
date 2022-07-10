@@ -52,14 +52,43 @@ class UserService {
 
   Future<void> checkAdmin(String phoneNumber) async {
     Map<String, dynamic> params = {'phone': phoneNumber};
-    await httpApiService.get(HttpApi.API_CHECK_ADMIN, params, Options(headers: HttpConfig.headers)).then((value) {
-      IS_ADMIN = value.data['status'] == '200';
+    await httpApiService.post(HttpApi.API_ADMIN_USER, params, null, Options(headers: HttpConfig.headers)).then((value) {
+      if (value.data['status'] == '200') {
+        IS_ADMIN = false;
+        IS_SUPER_ADMIN = true;
+      } else if (value.data['status'] == '201') {
+        IS_ADMIN = true;
+        IS_SUPER_ADMIN = false;
+      } else {
+        IS_ADMIN = false;
+        IS_SUPER_ADMIN = false;
+      }
     });
   }
 
   Future<void> logout(String phoneNumber, String token) async {
     Map<String, dynamic> params = {'phone': phoneNumber, 'token': token};
     await httpApiService.post(HttpApi.API_LOG_OUT, params, null, Options(headers: HttpConfig.headers));
+  }
+
+  Future<List<UserModel>> getAllAdminUser() async {
+    return await httpApiService.get(HttpApi.API_ADMIN_USER, null, Options(headers: HttpConfig.headers)).then((value) {
+      return List<UserModel>.from(value.data.map((x) => UserModel.fromJson(x)));
+    });
+  }
+
+  Future<String> addRole(String phoneNumber, String role) async {
+    Map<String, dynamic> params = {'phone': phoneNumber, 'role': role};
+    return await httpApiService.post(HttpApi.API_ROLE, params, null, Options(headers: HttpConfig.headers)).then((value) {
+      return value.data['status'];
+    });
+  }
+
+  Future<String> deleteRole(String phoneNumber) async {
+    Map<String, dynamic> params = {'phone': phoneNumber};
+    return await httpApiService.delete(HttpApi.API_ROLE, params, {}, Options(headers: HttpConfig.headers)).then((value) {
+      return value.data['status'];
+    });
   }
 }
 

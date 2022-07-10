@@ -64,6 +64,18 @@
     "order_error": "មានបញ្ហាក្នុងពេលបញ្ជាទិញ",
     "package_order": "កម្មង់ជាកញ្ចប់",
     "plz_login": "សូមធ្វើការចូលប្រព័ន្ធជាមុន",
-    "phone_used": "Phone Number is already been used",
-    "problem_regiseter": "Error registration"
+    "phone_used": "លេខទូរស័ព្ទបានប្រើប្រាស់រួចរាល់ក្នុងប្រព័ន្ធ",
+    "problem_regiseter": "ចុះឈ្មោះប្រើប្រាស់បរាជ័យ",
+    "permission_setting": "កំណត់សិទ្ធប្រើប្រាស់",
+    "set_to_admin": "ដាក់សិទ្ធជាអ្នកគ្រប់គ្រង",
+    "disqualification": "ដកសិទ្ធ",
+    "set_to_super_admin": "ដាក់សិទ្ធជាអ្នកគ្រប់គ្រងធំ",
+    "success_added_role": "ដាក់សិទ្ធបានជោគជ័យ",
+    "phone_not_in_system": "លេខទូរស័ព្ទមិនទាន់បានចុះឈ្មោះក្នុងប្រព័ន្ធ",
+    "unsuccess_added_role": "មានបញ្ហាក្នុងពេលដាក់សិទ្ធ",
+    "phone_already_admin": "លេខទូរស័ព្ទជាអ្នកគ្រប់គ្រងរួចរាល់",
+    "success_register": "ចុះឈ្មោះបានជោគជ័យ",
+    "success_delete_role": "ដកសិទ្ធបានជោគជ័យ",
+    "unsuccess_delete_role": "មានបញ្ហាក្នុងពេលដកសិទ្ធ",
+    "can_not_delete_your_self": "មិនអាចដកសិទ្ធខ្លួនឯងបាន"
 }

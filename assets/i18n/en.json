@@ -66,5 +66,16 @@
     "plz_login": "Please Login",
     "success_register": "Register Successfully",
     "phone_used": "Phone already used",
-    "problem_regiseter": "Error Registration"
+    "problem_regiseter": "Error Registration",
+    "Permission Setting": "Permission Setting",
+    "set_to_admin": "set to admin",
+    "disqualification": "Disqualification",
+    "set_to_super_admin": "set to super admin",
+    "success_added_role": "Added Role Successfully",
+    "phone_not_in_system": "Phone Number Is Not In The System",
+    "unsuccess_added_role": "Error Added Role",
+    "phone_already_admin": "Phone Number Is Already Admin",
+    "success_delete_role": "Disqualification Successfully",
+    "unsuccess_delete_role": "Error Disqualification",
+    "can_not_delete_your_self": "Can Not Disqualification Yourself"
 }
