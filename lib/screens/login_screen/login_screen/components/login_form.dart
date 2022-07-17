@@ -45,7 +45,6 @@ class _LoginFormState extends State<LoginForm> {
     Future.delayed(Duration.zero, () async {
       await orderService.getProductInCart(userId).then(
         (value) {
-          print(value.length);
           Provider.of<CartModelProvider>(context, listen: false).setCartModel(value);
         },
       );
@@ -58,7 +57,7 @@ class _LoginFormState extends State<LoginForm> {
       TokenHelper.getInstance().setLogedIn(true);
       Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
       getCart(userModel.id);
-      userService.checkAdmin(userModel.phone);
+      userService.checkAdmin(context, userModel.phone);
       if (widget.fromAddToCart) {
         Navigator.pop(context);
         Navigator.pop(context);

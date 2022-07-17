@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
-import 'package:fast_tech_app/core/public/public_variable.dart';
+import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/services/http/http_api.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class UserService {
   Future<UserModel?> getUser({
@@ -50,18 +52,18 @@ class UserService {
     }
   }
 
-  Future<void> checkAdmin(String phoneNumber) async {
+  Future<void> checkAdmin(BuildContext context, String phoneNumber) async {
     Map<String, dynamic> params = {'phone': phoneNumber};
     await httpApiService.post(HttpApi.API_ADMIN_USER, params, null, Options(headers: HttpConfig.headers)).then((value) {
       if (value.data['status'] == '200') {
-        IS_ADMIN = false;
-        IS_SUPER_ADMIN = true;
+        Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(false);
+        Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(true);
       } else if (value.data['status'] == '201') {
-        IS_ADMIN = true;
-        IS_SUPER_ADMIN = false;
+        Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(true);
+        Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(false);
       } else {
-        IS_ADMIN = false;
-        IS_SUPER_ADMIN = false;
+        Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(false);
+        Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(false);
       }
     });
   }

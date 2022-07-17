@@ -9,6 +9,17 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 import '../http/http_api.dart';
 
 class OrderService {
+  Future<String> updateOrderStatus(String orderId, int status, int isPackage) async {
+    try {
+      Map<String, dynamic> params = {'order_id': orderId, 'status': status, 'is_package': isPackage};
+      return await httpApiService.post(HttpApi.API_ORDER_STATUS, null, params, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '400';
+    }
+  }
+
   Future<List<DeliveryOrderModel>> getDeliveryOrder(int userID) async {
     try {
       Map<String, dynamic> params = {'user_id': userID};

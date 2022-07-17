@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class HttpApi {
   static const String API_PRODUCT = '/product';
   static const String API_SEARCH = '/search';
@@ -14,4 +16,6 @@ class HttpApi {
   static const String API_ADMIN_USER = '/admin-user';
   static const String API_LOG_OUT = '/user-logout';
   static const String API_ROLE = '/role';
+
+  static const String API_ORDER_STATUS = '/order-status';
 }

@@ -5,6 +5,7 @@ import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/core/provider/package_order_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/splash_screen/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => PickupOrderModelProvider()),
         ChangeNotifierProvider(create: (_) => DeliveryOrderModelProvider()),
         ChangeNotifierProvider(create: (_) => PackageOrderModelProvider()),
+        ChangeNotifierProvider(create: (_) => UserRoleProvider()),
       ],
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -53,6 +55,7 @@ class FastTechApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String langaugeCode = context.watch<I18nProvider>().languageCode;
+
     return GestureDetector(
       onTap: (() => FocusManager.instance.primaryFocus?.unfocus()),
       child: MaterialApp(

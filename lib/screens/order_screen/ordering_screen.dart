@@ -10,6 +10,7 @@ import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
+import 'package:fast_tech_app/widget/change_status_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/empty_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_packageOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_packageOrderModelList[index], true))),
+          children: List.generate(_packageOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_packageOrderModelList[index], true, false))),
         ),
       ),
     );
@@ -136,7 +137,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_deliveryOrderModelList[index], false))),
+          children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_deliveryOrderModelList[index], false, false))),
         ),
       ),
     );
@@ -152,7 +153,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           }));
         },
         child: Column(
-          children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_pickupOrderModelList[index], false))),
+          children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_pickupOrderModelList[index], false, true))),
         ),
       ),
     );
@@ -243,29 +244,34 @@ class _OrderingScreenState extends State<OrderingScreen> {
     );
   }
 
-  Widget _orderItem(var model, bool isPackageOrder) {
-    return Stack(
-      children: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            _displayImageWidget(model),
-            _displayNameWidget(model, isPackageOrder),
-            !isPackageOrder ? _displayPriceWidget(model) : const SizedBox.shrink(),
-          ]),
-        ),
-        Positioned(
-          bottom: 0,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            color: OrderStatusHelper.getColor(model.status),
-            child: Text(
-              I18NTranslations.of(context).text(OrderStatusHelper.getDesc(model.status)),
-              style: const TextStyle(color: Colors.white),
-            ),
+  Widget _orderItem(var model, bool isPackageOrder, bool isPickupOrder) {
+    return InkWell(
+      onTap: () {
+        ChangeOrderStatusBottomSheet.show(context, model, isPackage: isPackageOrder, isPickUp: isPickupOrder);
+      },
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(8),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              _displayImageWidget(model),
+              _displayNameWidget(model, isPackageOrder),
+              !isPackageOrder ? _displayPriceWidget(model) : const SizedBox.shrink(),
+            ]),
           ),
-        )
-      ],
+          Positioned(
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              color: OrderStatusHelper.getColor(model.status),
+              child: Text(
+                I18NTranslations.of(context).text(OrderStatusHelper.getDesc(model.status)),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 

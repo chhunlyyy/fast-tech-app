@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       await userService.getUser(token: token).then((value) {
         if (value != null) {
           getCart(value.id);
-          userService.checkAdmin(value.phone);
+          userService.checkAdmin(context, value.phone);
           Provider.of<UserModelProvider>(context, listen: false).setUserModel(value);
         }
       });

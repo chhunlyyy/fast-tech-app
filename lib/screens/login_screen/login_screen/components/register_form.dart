@@ -43,7 +43,7 @@ class RegisterForm extends StatelessWidget {
       Future.delayed(const Duration(seconds: 2)).whenComplete(() {
         TokenHelper.getInstance().setLogedIn(true);
         Provider.of<UserModelProvider>(context, listen: false).setUserModel(userModel);
-        userService.checkAdmin(userModel.phone);
+        userService.checkAdmin(context, userModel.phone);
         NavigationHelper.pushReplacement(
             context,
             const HomeScreen(

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 class AssetsConst {
   static String LOGO = "assets/images/logo.png";
   static String CAMBODAI_FLAG = "assets/images/cambodia_flag.jpeg";

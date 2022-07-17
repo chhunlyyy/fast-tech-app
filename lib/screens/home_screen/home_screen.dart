@@ -2,7 +2,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fast_tech_app/const/assets_const.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
-import 'package:fast_tech_app/core/public/public_variable.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
