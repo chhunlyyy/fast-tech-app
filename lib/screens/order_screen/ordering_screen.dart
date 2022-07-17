@@ -312,6 +312,8 @@ class _OrderingScreenState extends State<OrderingScreen> {
               NavigationHelper.push(
                 context,
                 MapScreen(
+                  name: model.user.name,
+                  phone: model.user.phone,
                   direction: LatLng(double.parse(model.product.address[0].latitude), double.parse(model.product.address[0].longitude)),
                 ),
               );

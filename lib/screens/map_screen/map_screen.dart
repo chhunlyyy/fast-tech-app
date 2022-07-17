@@ -8,8 +8,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
+  final String phone, name;
+
   final LatLng direction;
-  const MapScreen({Key? key, required this.direction}) : super(key: key);
+  const MapScreen({Key? key, required this.name, required this.phone, required this.direction}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -101,6 +103,7 @@ class _MapScreenState extends State<MapScreen> {
     return Material(
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           iconTheme: IconThemeData(color: ColorsConts.primaryColor),
           backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
           foregroundColor: ColorsConts.primaryColor,
@@ -116,37 +119,52 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget _buildBody() {
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(
-        target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
-        zoom: 14.5,
-      ),
-      markers: {
-        const Marker(
-          markerId: MarkerId('soruce'),
-          position: _sourceLocation,
+    return Column(
+      children: [
+        SingleChildScrollView(
+          child: Column(children: [
+            Text(I18NTranslations.of(context).text('user_name') + '\t' + widget.name, maxLines: 2),
+            Text(
+              I18NTranslations.of(context).text('phone_number') + '\t' + widget.phone,
+              maxLines: 2,
+            ),
+          ]),
         ),
-        Marker(
-          markerId: const MarkerId('destination'),
-          position: _directionLocation,
+        Expanded(
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+              zoom: 14.5,
+            ),
+            markers: {
+              const Marker(
+                markerId: MarkerId('soruce'),
+                position: _sourceLocation,
+              ),
+              Marker(
+                markerId: const MarkerId('destination'),
+                position: _directionLocation,
+              ),
+              Marker(
+                icon: _currentIcon,
+                markerId: const MarkerId('currentLocatoin'),
+                position: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+              ),
+            },
+            polylines: {
+              Polyline(
+                polylineId: const PolylineId("route"),
+                points: _polyLineCodinate,
+                color: Colors.blue,
+                width: 6,
+              )
+            },
+            onMapCreated: (controller) {
+              _googelMapController.complete(controller);
+            },
+          ),
         ),
-        Marker(
-          icon: _currentIcon,
-          markerId: const MarkerId('currentLocatoin'),
-          position: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
-        ),
-      },
-      polylines: {
-        Polyline(
-          polylineId: const PolylineId("route"),
-          points: _polyLineCodinate,
-          color: Colors.blue,
-          width: 6,
-        )
-      },
-      onMapCreated: (controller) {
-        _googelMapController.complete(controller);
-      },
+      ],
     );
   }
 }
