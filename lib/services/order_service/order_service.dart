@@ -9,6 +9,17 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 import '../http/http_api.dart';
 
 class OrderService {
+  Future<dynamic> getOrderStatistic(int userId) async {
+    Map<String, dynamic> params = {'user_id': userId};
+    try {
+      return await httpApiService.get(HttpApi.API_ORDER_STATISTIC, params, Options(headers: HttpConfig.headers)).then((value) {
+        return value;
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<String> updateOrderStatus(String orderId, int status, int isPackage) async {
     try {
       Map<String, dynamic> params = {'order_id': orderId, 'status': status, 'is_package': isPackage};
@@ -20,9 +31,14 @@ class OrderService {
     }
   }
 
-  Future<List<DeliveryOrderModel>> getDeliveryOrder(int userID) async {
+  Future<List<DeliveryOrderModel>> getDeliveryOrder(
+    int userID,
+    bool isDone, {
+    int pageSize = 10,
+    int pageIndex = 0,
+  }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
       return await httpApiService.get(HttpApi.API_DELIVERY_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<DeliveryOrderModel>.from(value.data.map((x) => DeliveryOrderModel.fromJson(x)));
       });
@@ -31,9 +47,14 @@ class OrderService {
     }
   }
 
-  Future<List<PackageOrderModel>> getPackageOrder(int userID) async {
+  Future<List<PackageOrderModel>> getPackageOrder(
+    int userID,
+    bool isDone, {
+    int pageSize = 10,
+    int pageIndex = 0,
+  }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
       return await httpApiService.get(HttpApi.API_PACKAGE_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<PackageOrderModel>.from(value.data.map((x) => PackageOrderModel.fromJson(x)));
       });
@@ -42,9 +63,14 @@ class OrderService {
     }
   }
 
-  Future<List<PickupOrderModel>> getPickupOrder(int userID) async {
+  Future<List<PickupOrderModel>> getPickupOrder(
+    int userID,
+    bool isDone, {
+    int pageSize = 10,
+    int pageIndex = 0,
+  }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
       return await httpApiService.get(HttpApi.API_PICKUP_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<PickupOrderModel>.from(value.data.map((x) => PickupOrderModel.fromJson(x)));
       });

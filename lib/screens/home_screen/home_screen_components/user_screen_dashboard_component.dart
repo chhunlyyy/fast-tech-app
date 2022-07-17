@@ -7,6 +7,7 @@ import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
+import 'package:fast_tech_app/screens/order_screen/done_order_screen.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/screens/permission_setting_screen/permission_setting_screen.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
@@ -51,7 +52,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         const SizedBox(height: 50),
         _line(),
         _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen(index: 0))),
-        _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () {}),
+        _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () => NavigationHelper.push(context, const DoneOrderScreen())),
         context.watch<UserRoleProvider>().isSuperAdmin
             ? _buildBotton('permission_setting', FontAwesomeIcons.key, Colors.deepPurple, () => NavigationHelper.push(context, const PermissionSettingScreen()))
             : const SizedBox.shrink(),

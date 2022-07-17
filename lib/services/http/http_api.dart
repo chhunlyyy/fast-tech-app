@@ -16,6 +16,6 @@ class HttpApi {
   static const String API_ADMIN_USER = '/admin-user';
   static const String API_LOG_OUT = '/user-logout';
   static const String API_ROLE = '/role';
-
   static const String API_ORDER_STATUS = '/order-status';
+  static const String API_ORDER_STATISTIC = '/order-statistic';
 }

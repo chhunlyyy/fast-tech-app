@@ -40,7 +40,7 @@ class ChangeOrderStatusWidget extends StatefulWidget {
 class _ChangeOrderStatusWidgetState extends State<ChangeOrderStatusWidget> {
   void getPackageOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getPackageOrder(userId).then((value) {
+      await orderService.getPackageOrder(userId, false).then((value) {
         Provider.of<PackageOrderModelProvider>(context, listen: false).setPackageupOrderModel(value);
       });
     });
@@ -48,7 +48,7 @@ class _ChangeOrderStatusWidgetState extends State<ChangeOrderStatusWidget> {
 
   void getPickupOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getPickupOrder(userId).then((value) {
+      await orderService.getPickupOrder(userId, false).then((value) {
         Provider.of<PickupOrderModelProvider>(context, listen: false).setPickupOrderModel(value);
       });
     });
@@ -56,7 +56,7 @@ class _ChangeOrderStatusWidgetState extends State<ChangeOrderStatusWidget> {
 
   void getDeliveryOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getDeliveryOrder(userId).then((value) {
+      await orderService.getDeliveryOrder(userId, false).then((value) {
         Provider.of<DeliveryOrderModelProvider>(context, listen: false).setDeliveryModel(value);
       });
     });

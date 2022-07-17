@@ -3,85 +3,105 @@ import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/delivery_order_model.dart';
 import 'package:fast_tech_app/core/models/package_order_model.dart';
 import 'package:fast_tech_app/core/models/pickup_order_model.dart';
-import 'package:fast_tech_app/core/provider/delivery_order_provider.dart';
-import 'package:fast_tech_app/core/provider/package_order_provider.dart';
-import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
-import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
-import 'package:fast_tech_app/screens/map_screen/map_screen.dart';
 import 'package:fast_tech_app/screens/ordering_stepper_screen/ordering_stepper_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
-import 'package:fast_tech_app/widget/change_status_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/empty_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class OrderingScreen extends StatefulWidget {
-  final int index;
-  const OrderingScreen({Key? key, required this.index}) : super(key: key);
+class DoneOrderScreen extends StatefulWidget {
+  const DoneOrderScreen({Key? key}) : super(key: key);
 
   @override
-  State<OrderingScreen> createState() => _OrderingScreenState();
+  State<DoneOrderScreen> createState() => _DoneOrderScreen();
 }
 
-class _OrderingScreenState extends State<OrderingScreen> {
+class _DoneOrderScreen extends State<DoneOrderScreen> {
   late Size _size;
-  List<PickupOrderModel> _pickupOrderModelList = [];
-  List<DeliveryOrderModel> _deliveryOrderModelList = [];
-  List<PackageOrderModel> _packageOrderModelList = [];
+  final List<PickupOrderModel> _pickupOrderModelList = [];
+  final List<DeliveryOrderModel> _deliveryOrderModelList = [];
+  final List<PackageOrderModel> _packageOrderModelList = [];
+  late int userId;
   int _statusIndex = 0;
+  int _pagesize = 10;
+  int _pageIndex = 0;
+  bool _isLoading = true;
+  //
+  int _deliveryCount = 0;
+  int _pickupCount = 0;
+  int _packageCount = 0;
+
+  void getStatistic() async {
+    await orderService.getOrderStatistic(userId).then((value) {
+      setState(() {
+        _deliveryCount = value.data['deliveryCount'];
+        _pickupCount = value.data['pickupCount'];
+        _packageCount = value.data['packageCount'];
+      });
+    });
+  }
 
   void getPackageOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getPackageOrder(userId, false).then((value) {
-        Provider.of<PackageOrderModelProvider>(context, listen: false).setPackageupOrderModel(value);
+      await orderService.getPackageOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+        _packageOrderModelList.addAll(value);
+
+        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+          setState(() {
+            _isLoading = false;
+          });
+        });
       });
     });
   }
 
   void getPickupOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getPickupOrder(userId, false).then((value) {
-        Provider.of<PickupOrderModelProvider>(context, listen: false).setPickupOrderModel(value);
+      await orderService.getPickupOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+        _pickupOrderModelList.addAll(value);
+
+        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+          setState(() {
+            _isLoading = false;
+          });
+        });
       });
     });
   }
 
   void getDeliveryOrder(int userId) {
     Future.delayed(Duration.zero, () async {
-      await orderService.getDeliveryOrder(userId, false).then((value) {
-        Provider.of<DeliveryOrderModelProvider>(context, listen: false).setDeliveryModel(value);
+      await orderService.getDeliveryOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+        _deliveryOrderModelList.addAll(value);
+
+        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+          setState(() {
+            _isLoading = false;
+          });
+        });
       });
     });
-  }
-
-  void _getData() {
-    int userId = Provider.of<UserModelProvider>(context, listen: false).userModel!.id;
-    getPickupOrder(userId);
-    getDeliveryOrder(userId);
-    getPackageOrder(userId);
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _statusIndex = widget.index;
-    _getData();
+    userId = Provider.of<UserModelProvider>(context, listen: false).userModel!.id;
+    getDeliveryOrder(userId);
+    getStatistic();
   }
 
   @override
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
-    _pickupOrderModelList = Provider.of<PickupOrderModelProvider>(context).pickupOrderModelList;
-    _deliveryOrderModelList = Provider.of<DeliveryOrderModelProvider>(context).deliveryOrderModelList;
-    _packageOrderModelList = Provider.of<PackageOrderModelProvider>(context).packageOrderModelList;
+
     return Material(
       child: Scaffold(
         appBar: AppBar(
@@ -89,7 +109,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             elevation: 0,
             backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
             foregroundColor: ColorsConts.primaryColor,
-            title: Text(I18NTranslations.of(context).text('is_buying'))),
+            title: Text(I18NTranslations.of(context).text('done_buying'))),
         body: _buildBody(),
       ),
     );
@@ -110,7 +130,13 @@ class _OrderingScreenState extends State<OrderingScreen> {
       child: Column(
         children: [
           _switchStatusBarWidget(),
-          content,
+          _isLoading
+              ? Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(color: ColorsConts.primaryColor),
+                  ),
+                )
+              : content,
         ],
       ),
     );
@@ -122,9 +148,18 @@ class _OrderingScreenState extends State<OrderingScreen> {
         header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
         onRefresh: () {
           return Future.delayed(Duration.zero, (() {
-            _getData();
+            setState(() {
+              _isLoading = true;
+            });
+            _packageOrderModelList.clear();
+            _pageIndex = 0;
+            getPackageOrder(userId);
           }));
         },
+        onLoad: (() async {
+          _pageIndex++;
+          getPackageOrder(userId);
+        }),
         child: Column(
           children: List.generate(_packageOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_packageOrderModelList[index], true, false))),
         ),
@@ -138,9 +173,18 @@ class _OrderingScreenState extends State<OrderingScreen> {
         header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
         onRefresh: () {
           return Future.delayed(Duration.zero, (() {
-            _getData();
+            setState(() {
+              _isLoading = true;
+            });
+            _deliveryOrderModelList.clear();
+            _pageIndex = 0;
+            getDeliveryOrder(userId);
           }));
         },
+        onLoad: (() async {
+          _pageIndex++;
+          getDeliveryOrder(userId);
+        }),
         child: Column(
           children: List.generate(_deliveryOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_deliveryOrderModelList[index], false, false))),
         ),
@@ -153,10 +197,19 @@ class _OrderingScreenState extends State<OrderingScreen> {
       child: EasyRefresh(
         header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
         onRefresh: () {
+          setState(() {
+            _isLoading = true;
+          });
           return Future.delayed(Duration.zero, (() {
-            _getData();
+            _pickupOrderModelList.clear();
+            _pageIndex = 0;
+            getPickupOrder(userId);
           }));
         },
+        onLoad: (() async {
+          _pageIndex++;
+          getPickupOrder(userId);
+        }),
         child: Column(
           children: List.generate(_pickupOrderModelList.length, (index) => AnimationWidget.animation(index, _orderItem(_pickupOrderModelList[index], false, true))),
         ),
@@ -195,13 +248,13 @@ class _OrderingScreenState extends State<OrderingScreen> {
     late String qty;
     if (index == 0) {
       text = I18NTranslations.of(context).text('delivery');
-      qty = _deliveryOrderModelList.length.toString();
+      qty = _deliveryCount.toString();
     } else if (index == 1) {
       text = I18NTranslations.of(context).text('pick_up');
-      qty = _pickupOrderModelList.length.toString();
+      qty = _pickupCount.toString();
     } else {
       text = I18NTranslations.of(context).text('package_order');
-      qty = _packageOrderModelList.length.toString();
+      qty = _packageCount.toString();
     }
 
     return AnimatedContainer(
@@ -217,9 +270,26 @@ class _OrderingScreenState extends State<OrderingScreen> {
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              setState(() {
-                _statusIndex = index;
-              });
+              if (!_isLoading) {
+                setState(() {
+                  _pageIndex = 0;
+                  _pagesize = 10;
+                  _statusIndex = index;
+                  _deliveryOrderModelList.clear();
+                  _packageOrderModelList.clear();
+                  _pickupOrderModelList.clear();
+
+                  _isLoading = true;
+
+                  if (index == 0) {
+                    getDeliveryOrder(userId);
+                  } else if (index == 1) {
+                    getPickupOrder(userId);
+                  } else {
+                    getPackageOrder(userId);
+                  }
+                });
+              }
             },
             child: Center(
               child: Padding(
@@ -252,15 +322,13 @@ class _OrderingScreenState extends State<OrderingScreen> {
   Widget _orderItem(var model, bool isPackageOrder, bool isPickupOrder) {
     return InkWell(
       onTap: () {
-        (Provider.of<UserRoleProvider>(context, listen: false).isAdmin || Provider.of<UserRoleProvider>(context, listen: false).isSuperAdmin)
-            ? ChangeOrderStatusBottomSheet.show(context, model, isPackage: isPackageOrder, isPickUp: isPickupOrder)
-            : NavigationHelper.push(
-                context,
-                OrderingStepperScreen(
-                  orderModel: model,
-                  isPackage: isPackageOrder,
-                  isPickup: isPickupOrder,
-                ));
+        NavigationHelper.push(
+            context,
+            OrderingStepperScreen(
+              orderModel: model,
+              isPackage: isPackageOrder,
+              isPickup: isPickupOrder,
+            ));
       },
       child: Stack(
         children: [
@@ -269,7 +337,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _displayImageWidget(model),
               _displayNameWidget(model, isPackageOrder),
-              !isPackageOrder ? _displayPriceWidget(model, (isPickupOrder == false)) : _deliveryIconWidget(model),
+              !isPackageOrder ? _displayPriceWidget(model, (isPickupOrder == false)) : const SizedBox.shrink(),
             ]),
           ),
           Positioned(
@@ -300,29 +368,8 @@ class _OrderingScreenState extends State<OrderingScreen> {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: ColorsConts.primaryColor),
         ),
-        (isDelivery) ? _deliveryIconWidget(model) : const SizedBox.shrink()
       ],
     );
-  }
-
-  Widget _deliveryIconWidget(var model) {
-    return (Provider.of<UserRoleProvider>(context).isAdmin || Provider.of<UserRoleProvider>(context).isSuperAdmin)
-        ? InkWell(
-            onTap: () {
-              NavigationHelper.push(
-                context,
-                MapScreen(
-                  direction: LatLng(double.parse(model.product.address[0].latitude), double.parse(model.product.address[0].longitude)),
-                ),
-              );
-            },
-            child: const Icon(
-              Icons.delivery_dining,
-              color: Colors.blue,
-              size: 30,
-            ),
-          )
-        : const SizedBox.shrink();
   }
 
   Widget _displayNameWidget(var model, bool isPackageOrder) {
