@@ -6,19 +6,21 @@ import 'dart:convert';
 
 import 'package:fast_tech_app/core/models/delivery_order_model.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/core/models/user_model.dart';
 
 PackageOrderModel packageOrderModelFromJson(String str) => PackageOrderModel.fromJson(json.decode(str));
 
 String packageOrderModelToJson(PackageOrderModel data) => json.encode(data.toJson());
 
 class PackageOrderModel {
-  PackageOrderModel({required this.id, required this.userId, required this.productId, required this.addressIdRef, required this.product, required this.status});
+  PackageOrderModel({required this.id, required this.userId, required this.productId, required this.addressIdRef, required this.product, required this.status, required this.user});
 
   int id;
   int userId;
   int productId;
   String addressIdRef;
   Product product;
+  UserModel user;
   int status;
 
   factory PackageOrderModel.fromJson(Map<String, dynamic> json) => PackageOrderModel(
@@ -28,6 +30,7 @@ class PackageOrderModel {
         status: json["status"],
         addressIdRef: json["address_id_ref"],
         product: Product.fromJson(json["product"]),
+        user: UserModel.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {

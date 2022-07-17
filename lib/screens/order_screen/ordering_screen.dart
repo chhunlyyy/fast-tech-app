@@ -7,7 +7,10 @@ import 'package:fast_tech_app/core/provider/delivery_order_provider.dart';
 import 'package:fast_tech_app/core/provider/package_order_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
+import 'package:fast_tech_app/core/provider/user_role_provider.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
+import 'package:fast_tech_app/screens/ordering_stepper_screen/ordering_stepper_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/change_status_bottom_sheet.dart';
@@ -247,7 +250,15 @@ class _OrderingScreenState extends State<OrderingScreen> {
   Widget _orderItem(var model, bool isPackageOrder, bool isPickupOrder) {
     return InkWell(
       onTap: () {
-        ChangeOrderStatusBottomSheet.show(context, model, isPackage: isPackageOrder, isPickUp: isPickupOrder);
+        (Provider.of<UserRoleProvider>(context, listen: false).isAdmin || Provider.of<UserRoleProvider>(context, listen: false).isSuperAdmin)
+            ? ChangeOrderStatusBottomSheet.show(context, model, isPackage: isPackageOrder, isPickUp: isPickupOrder)
+            : NavigationHelper.push(
+                context,
+                OrderingStepperScreen(
+                  orderModel: model,
+                  isPackage: isPackageOrder,
+                  isPickup: isPickupOrder,
+                ));
       },
       child: Stack(
         children: [

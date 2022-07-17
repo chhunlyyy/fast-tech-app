@@ -91,6 +91,15 @@ class _ChangeOrderStatusWidgetState extends State<ChangeOrderStatusWidget> {
         Padding(
           padding: const EdgeInsets.all(10),
           child: Row(
+            children: [
+              Expanded(child: Center(child: Text(I18NTranslations.of(context).text('user_name') + '\t:\t' + widget.orderModel.user.name))),
+              Expanded(child: Center(child: Text(I18NTranslations.of(context).text('phone_number') + '\t:\t' + widget.orderModel.user.phone))),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text(widget.orderModel.product.name),

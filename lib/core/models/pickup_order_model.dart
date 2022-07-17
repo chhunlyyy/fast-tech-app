@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fast_tech_app/core/models/product_model.dart';
+import 'package:fast_tech_app/core/models/user_model.dart';
 
 PickupOrderModel pickupOrderModelFromJson(String str) => PickupOrderModel.fromJson(json.decode(str));
 
@@ -17,6 +18,7 @@ class PickupOrderModel {
     required this.status,
     required this.addressIdRef,
     required this.product,
+    required this.user,
   });
 
   int id;
@@ -28,6 +30,7 @@ class PickupOrderModel {
   int status;
   String addressIdRef;
   Product product;
+  UserModel user;
 
   factory PickupOrderModel.fromJson(Map<String, dynamic> json) => PickupOrderModel(
         id: json["id"],
@@ -39,6 +42,7 @@ class PickupOrderModel {
         status: json["status"],
         addressIdRef: json["address_id_ref"],
         product: Product.fromJson(json["product"]),
+        user: UserModel.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {

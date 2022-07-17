@@ -5,6 +5,8 @@
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'dart:convert';
 
+import 'package:fast_tech_app/core/models/user_model.dart';
+
 DeliveryOrderModel deliveryOrderModelFromJson(String str) => DeliveryOrderModel.fromJson(json.decode(str));
 
 String deliveryOrderModelToJson(DeliveryOrderModel data) => json.encode(data.toJson());
@@ -20,6 +22,7 @@ class DeliveryOrderModel {
     required this.status,
     required this.addressIdRef,
     required this.product,
+    required this.user,
   });
 
   int id;
@@ -31,6 +34,7 @@ class DeliveryOrderModel {
   int status;
   String addressIdRef;
   Product product;
+  UserModel user;
 
   factory DeliveryOrderModel.fromJson(Map<String, dynamic> json) => DeliveryOrderModel(
         id: json["id"],
@@ -42,6 +46,7 @@ class DeliveryOrderModel {
         status: json["status"],
         addressIdRef: json["address_id_ref"],
         product: Product.fromJson(json["product"]),
+        user: UserModel.fromJson(json["user"]),
       );
 
   Map<String, dynamic> toJson() => {
