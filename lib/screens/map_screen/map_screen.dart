@@ -8,7 +8,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final LatLng direction;
+  const MapScreen({Key? key, required this.direction}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -17,8 +18,8 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   final Completer<GoogleMapController> _googelMapController = Completer();
   final String google_api_key = 'AIzaSyADe4ap_GP1t90-1oWzOF-65rATryBiXQo';
-  static const _sourceLocation = LatLng(11.5683, 104.8908);
-  static const _directionLocation = LatLng(11.5885, 104.9302);
+  static const _sourceLocation = LatLng(11.574346190818169, 104.90369256331002);
+  late var _directionLocation;
 
   final BitmapDescriptor _sourceIcon = BitmapDescriptor.defaultMarker;
   final BitmapDescriptor _locatoinIcon = BitmapDescriptor.defaultMarker;
@@ -26,7 +27,7 @@ class _MapScreenState extends State<MapScreen> {
   LocationData? _currentLocation;
 
   void _setCustomeIcon() async {
-    // _currentIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration.empty, AssetsConst.CAMBODAI_FLAG);
+    // _currentIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration.empty, 'assets/images/car');
   }
 
   void _getCurrentLocation() async {
@@ -35,23 +36,27 @@ class _MapScreenState extends State<MapScreen> {
     location.getLocation().then((value) {
       _currentLocation = value;
     }).whenComplete(() {
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     });
 
     GoogleMapController googleMapController = await _googelMapController.future;
 
     location.onLocationChanged.listen((newLocation) {
-      setState(() {
-        _currentLocation = newLocation;
-        googleMapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 14.5,
-              target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+      if (mounted) {
+        setState(() {
+          _currentLocation = newLocation;
+          googleMapController.animateCamera(
+            CameraUpdate.newCameraPosition(
+              CameraPosition(
+                zoom: 14.5,
+                target: LatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+              ),
             ),
-          ),
-        );
-      });
+          );
+        });
+      }
     });
   }
 
@@ -70,16 +75,24 @@ class _MapScreenState extends State<MapScreen> {
       for (var pointLatLng in polylineResult.points) {
         _polyLineCodinate.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       }
-      setState(() {});
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   void initState() {
+    _directionLocation = widget.direction;
     _setCustomeIcon();
     _getCurrentLocation();
     _getPolyPoint();
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -113,8 +126,8 @@ class _MapScreenState extends State<MapScreen> {
           markerId: MarkerId('soruce'),
           position: _sourceLocation,
         ),
-        const Marker(
-          markerId: MarkerId('destination'),
+        Marker(
+          markerId: const MarkerId('destination'),
           position: _directionLocation,
         ),
         Marker(

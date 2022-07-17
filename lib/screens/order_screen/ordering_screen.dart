@@ -10,6 +10,7 @@ import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/order_status_helper.dart';
+import 'package:fast_tech_app/screens/map_screen/map_screen.dart';
 import 'package:fast_tech_app/screens/ordering_stepper_screen/ordering_stepper_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
@@ -18,6 +19,7 @@ import 'package:fast_tech_app/widget/empty_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class OrderingScreen extends StatefulWidget {
@@ -267,7 +269,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               _displayImageWidget(model),
               _displayNameWidget(model, isPackageOrder),
-              !isPackageOrder ? _displayPriceWidget(model) : const SizedBox.shrink(),
+              !isPackageOrder ? _displayPriceWidget(model, (isPickupOrder == false)) : _deliveryIconWidget(model),
             ]),
           ),
           Positioned(
@@ -286,7 +288,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
     );
   }
 
-  Widget _displayPriceWidget(var model) {
+  Widget _displayPriceWidget(var model, bool isDelivery) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,7 +300,26 @@ class _OrderingScreenState extends State<OrderingScreen> {
           overflow: TextOverflow.ellipsis,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: ColorsConts.primaryColor),
         ),
+        (isDelivery && (Provider.of<UserRoleProvider>(context).isAdmin || Provider.of<UserRoleProvider>(context).isSuperAdmin)) ? _deliveryIconWidget(model) : const SizedBox.shrink()
       ],
+    );
+  }
+
+  Widget _deliveryIconWidget(var model) {
+    return InkWell(
+      onTap: () {
+        NavigationHelper.push(
+          context,
+          MapScreen(
+            direction: LatLng(double.parse(model.product.address[0].latitude), double.parse(model.product.address[0].longitude)),
+          ),
+        );
+      },
+      child: const Icon(
+        Icons.delivery_dining,
+        color: Colors.blue,
+        size: 30,
+      ),
     );
   }
 
