@@ -9,10 +9,13 @@ class HttpApiService {
 
   ///
   final Dio _dio = Dio(BaseOptions(
-    connectTimeout: 500000,
-    receiveTimeout: 500000,
-    headers: HttpConfig.headers,
-  ));
+      connectTimeout: 500000,
+      receiveTimeout: 500000,
+      headers: HttpConfig.headers,
+      followRedirects: false,
+      validateStatus: (status) {
+        return status! < 500;
+      }));
 
   // Singleton Declaration
   static final HttpApiService _instance = HttpApiService._internal();

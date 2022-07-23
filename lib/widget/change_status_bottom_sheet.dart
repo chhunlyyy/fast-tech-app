@@ -16,7 +16,7 @@ class ChangeOrderStatusBottomSheet {
         context: context,
         builder: (context) {
           return SizedBox(
-            height: MediaQuery.of(context).size.height / 3,
+            height: MediaQuery.of(context).size.height / 2,
             child: ChangeOrderStatusWidget(
               orderModel: orderModel,
               isPacakge: isPackage,

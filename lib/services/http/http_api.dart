@@ -18,4 +18,7 @@ class HttpApi {
   static const String API_ROLE = '/role';
   static const String API_ORDER_STATUS = '/order-status';
   static const String API_ORDER_STATISTIC = '/order-statistic';
+  static const String API_COLOR = '/color';
+  static const String API_DETAIL = '/detail';
+  static const String API_IMAGE = '/image';
 }

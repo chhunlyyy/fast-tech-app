@@ -14,14 +14,14 @@ class HttpConfig {
 
   Map<String, dynamic> configPreference = {};
 
-  static HttpConfig _instance = HttpConfig();
+  static final HttpConfig _instance = HttpConfig();
 
   static HttpConfig getInstance() {
     return _instance;
   }
 
   void setConfigPreference(String clientCode, Map<String, dynamic> pConfigPreference) {
-    this.configPreference = pConfigPreference;
+    configPreference = pConfigPreference;
   }
 
   String getBaseUrl() {

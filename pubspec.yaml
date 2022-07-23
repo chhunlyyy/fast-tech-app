@@ -33,6 +33,11 @@ dependencies:
   device_info: ^2.0.3
   flutter_polyline_points: ^1.0.0
   uuid: ^3.0.6
+  flutter_colorpicker: ^1.0.3
+  image_picker:
+  file_picker:
+  flutter_svg: ^1.0.0
+  multi_image_picker2: ^5.0.2
 
   google_maps_flutter: ^2.1.8
   location: ^4.4.0

@@ -6,6 +6,7 @@ import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/helper/device_infor.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
+import 'package:fast_tech_app/screens/add_new_product_screen/add_new_product_screen.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
 import 'package:fast_tech_app/screens/order_screen/done_order_screen.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
@@ -53,6 +54,9 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         _line(),
         _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen(index: 0))),
         _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () => NavigationHelper.push(context, const DoneOrderScreen())),
+        context.watch<UserRoleProvider>().isSuperAdmin || context.watch<UserRoleProvider>().isAdmin
+            ? _buildBotton('insert_product', FontAwesomeIcons.plus, Colors.brown, () => NavigationHelper.push(context, const AddNewProductScreen()))
+            : const SizedBox.shrink(),
         context.watch<UserRoleProvider>().isSuperAdmin
             ? _buildBotton('permission_setting', FontAwesomeIcons.key, Colors.deepPurple, () => NavigationHelper.push(context, const PermissionSettingScreen()))
             : const SizedBox.shrink(),

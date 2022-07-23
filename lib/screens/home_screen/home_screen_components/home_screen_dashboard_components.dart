@@ -67,19 +67,10 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
   Widget build(BuildContext context) {
     _size = MediaQuery.of(context).size;
     return Expanded(
-        child: Material(
-      child: EasyRefresh(
-        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
-        onLoad: (() async {
-          _getAllProducts(false);
-        }),
-        onRefresh: () {
-          return Future.delayed(Duration.zero, (() {
-            _getAllProducts(true);
-          }));
-        },
-        child: CustomScrollView(
-          slivers: [
+      child: Material(
+          child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
             SliverToBoxAdapter(
               child: SizedBox(
                 child: Column(children: [
@@ -101,9 +92,6 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
                 ]),
               ),
             ),
-
-            //
-            //tabbar
             SliverAppBar(
               automaticallyImplyLeading: false,
               toolbarHeight: 40,
@@ -111,13 +99,28 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
               pinned: true,
               title: Container(margin: const EdgeInsets.only(bottom: 15), alignment: Alignment.centerLeft, child: _textLabel(true)),
             ),
-            SliverFillRemaining(
-              child: _listAllProductWidget(),
-            ),
-          ],
-        ),
-      ),
-    ));
+          ];
+        },
+        body: EasyRefresh(
+            header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+            onLoad: (() async {
+              _getAllProducts(false);
+            }),
+            onRefresh: () {
+              return Future.delayed(Duration.zero, (() {
+                _getAllProducts(true);
+              }));
+            },
+            child: Column(
+              children: [
+                _listAllProductWidget(),
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                )
+              ],
+            )),
+      )),
+    );
   }
 
   Widget _listAllProductWidget() {
