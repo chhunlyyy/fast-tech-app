@@ -19,10 +19,10 @@ class ProductService {
       for (File file in files) {
         postData['image'] = await MultipartFile.fromFile(file.path, filename: basename(file.path));
         try {
-          return await httpApiService.post(HttpApi.API_IMAGE, FormData.fromMap(postData), null, Options(headers: HttpConfig.headers)).then((value) {
+          await httpApiService.post(HttpApi.API_IMAGE, FormData.fromMap(postData), null, Options(headers: HttpConfig.headers)).then((value) {
             result = value.data['status'];
 
-            return result;
+            result;
           });
         } catch (e) {
           result = '402';

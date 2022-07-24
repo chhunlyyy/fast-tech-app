@@ -88,7 +88,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
           if (value == '200' && colorStatus == "200" && detailStatus == '200' && imageStatus == '200') {
             DialogWidget.show(
               context,
-              'insert_product_success',
+              I18NTranslations.of(context).text('insert_product_success'),
               dialogType: DialogType.SUCCES,
               onCancelPress: () => NavigationHelper.push(context, const HomeScreen(dasboardEnum: DASBOARD_ENUM.homeScreen)),
               onOkPress: () => NavigationHelper.push(context, const AddNewProductScreen()),
@@ -96,7 +96,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               btnCancelText: I18NTranslations.of(context).text('go_to_home_screen'),
             );
           } else {
-            DialogWidget.show(context, 'insert_product_unsuccess', dialogType: DialogType.ERROR);
+            DialogWidget.show(context, I18NTranslations.of(context).text('insert_product_unsuccess'), dialogType: DialogType.ERROR);
           }
         });
       });
@@ -379,7 +379,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                   _detailDescControllerList.add(TextEditingController());
                 });
               },
-              child: const Text('add_more_detail'))
+              child: Text(I18NTranslations.of(context).text('add_more_detail')))
         ],
       ),
     );
