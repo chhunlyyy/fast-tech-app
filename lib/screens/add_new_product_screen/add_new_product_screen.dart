@@ -7,6 +7,7 @@ import 'package:fast_tech_app/core/models/product_insert_model.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/helper/file_picker_widget.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/components/product_component/product_detail.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
@@ -15,6 +16,7 @@ import 'package:fast_tech_app/widget/show_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:fast_tech_app/core/models/product_model.dart' as productModel;
 
 class AddNewProductScreen extends StatefulWidget {
   final ProductModel? productModel;
@@ -40,22 +42,196 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   final TextEditingController _minQtyController = TextEditingController();
   //
   int _colorLength = 1;
-  final List<Color> _color = [Colors.black];
-  final List<TextEditingController> _colorName = List.generate(1, (index) => TextEditingController(text: 'ខ្មៅ'));
+  List<Color> _color = [Colors.black];
+  List<TextEditingController> _colorName = List.generate(1, (index) => TextEditingController(text: 'ខ្មៅ'));
   //
   /*  image */
   List<File> productImages = [];
+
+  List<ImageModel> deletedImage = [];
   /* */
+  final List<productModel.ColorModel> _deletedColor = [];
+
+  final List<productModel.DetailModel> _deletedDetail = [];
 
   /*  detail post data */
   int _detailLength = 1;
-  final List<TextEditingController> _detailNameControllerList = List.generate(1, (index) => TextEditingController());
-  final List<TextEditingController> _detailDescControllerList = List.generate(1, (index) => TextEditingController());
+  List<TextEditingController> _detailNameControllerList = List.generate(1, (index) => TextEditingController());
+  List<TextEditingController> _detailDescControllerList = List.generate(1, (index) => TextEditingController());
   /* */
 
   /*
    * add proudct function 
    */
+
+  void _onUpdate() async {
+    if (_checkValidation(true)) {
+      ProductInsertModel productInsertModel = ProductInsertModel(
+        widget.productModel!.idRef,
+        _nameController.text,
+        double.parse(_priceController.text),
+        double.parse(_discountController.text),
+        _isWrranty ? 1 : 0,
+        int.parse(_minQtyController.text),
+        double.parse(_priceAfterDiscoutnController.text),
+        _isWrranty ? _warrantyPeriodController.text : 'no warranty',
+        _isCamera ? 1 : 0,
+      );
+      setState(() {
+        _isLoading = true;
+      });
+
+      String productStatus = await productService.insertProduct(1, productInsertModel);
+      String colorStatus = await _updateColor();
+      String detailStatus = await _updateDetail();
+      String imageStatus = await _updateImage();
+
+      Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+        setState(() {
+          _isLoading = false;
+        });
+        if (productStatus == '200' && colorStatus == "200" && detailStatus == '200' && imageStatus == '200') {
+          DialogWidget.show(context, I18NTranslations.of(context).text('update-successfully'), dialogType: DialogType.SUCCES);
+
+          Future.delayed(const Duration(seconds: 2)).whenComplete(() async {
+            await productService.getProductById(widget.productModel!.id).then((value) {
+              NavigationHelper.push(
+                  context,
+                  const HomeScreen(
+                    dasboardEnum: DASBOARD_ENUM.homeScreen,
+                  ));
+            });
+          });
+        } else {
+          DialogWidget.show(context, I18NTranslations.of(context).text('update-unsuccessfully'), dialogType: DialogType.ERROR);
+        }
+      });
+    }
+  }
+
+  /* */
+
+  Future<String> _updateImage() async {
+    String status = '';
+    if (deletedImage.isEmpty && productImages.isEmpty) {
+      status = '200';
+    }
+    if (deletedImage.isNotEmpty) {
+      for (var element in deletedImage) {
+        await productService.deleteImage(element.id.toString()).then((value) {
+          status = value;
+        });
+      }
+    }
+    if (productImages.isNotEmpty) {
+      await productService.insertImage(productImages, widget.productModel!.idRef).then((value) {
+        status = value;
+      });
+    }
+
+    return status;
+  }
+
+  Future<String> _updateDetail() async {
+    String status = '';
+    // delete deleted detail
+    if (_deletedDetail.isNotEmpty) {
+      for (var detail in _deletedDetail) {
+        await productService.deleteDetail(detail.id.toString()).then((value) {
+          status = value;
+        });
+      }
+    }
+    // update detail
+
+    if (widget.productModel!.details.isNotEmpty) {
+      for (int i = 0; i < widget.productModel!.details.length; i++) {
+        await productService
+            .insertDetail(
+          widget.productModel!.details[i].id.toString(),
+          widget.productModel!.details[i].productIdRef,
+          _detailNameControllerList[i].text,
+          _detailDescControllerList[i].text,
+          1,
+        )
+            .then((value) {
+          status = value;
+        });
+      }
+    }
+    // add new color
+
+    if (_detailLength > widget.productModel!.details.length) {
+      int length = _detailLength - widget.productModel!.details.length;
+      for (int i = 0; i < length; i++) {
+        int index = (widget.productModel!.details.length - 1) + 1;
+        await productService
+            .insertDetail(
+          null,
+          widget.productModel!.details[i].productIdRef,
+          _detailNameControllerList[index].text,
+          _detailDescControllerList[index].text,
+          0,
+        )
+            .then((value) {
+          status = value;
+        });
+      }
+    }
+
+    return status;
+  }
+
+  Future<String> _updateColor() async {
+    String status = '';
+    // delete deleted color
+    if (_deletedColor.isNotEmpty) {
+      for (var color in _deletedColor) {
+        await productService.deleteColor(color.id.toString()).then((value) {
+          status = value;
+        });
+      }
+    }
+    // update color
+
+    if (widget.productModel!.colors.isNotEmpty) {
+      for (int i = 0; i < widget.productModel!.colors.length; i++) {
+        await productService
+            .insertColor(
+          widget.productModel!.colors[i].id,
+          widget.productModel!.colors[i].productIdRef,
+          _colorName[i].text,
+          '0x' + _color[i].value.toRadixString(16),
+          1,
+        )
+            .then((value) {
+          status = value;
+        });
+      }
+    }
+    // add new color
+
+    if (_colorLength > widget.productModel!.colors.length) {
+      int length = _colorLength - widget.productModel!.colors.length;
+      for (int i = 0; i < length; i++) {
+        int index = (widget.productModel!.colors.length - 1) + 1;
+        await productService
+            .insertColor(
+          null,
+          widget.productModel!.colors[i].productIdRef,
+          _colorName[index].text,
+          '0x' + _color[index].value.toRadixString(16),
+          0,
+        )
+            .then((value) {
+          status = value;
+        });
+      }
+    }
+
+    return status;
+  }
+  /* */
 
   void _addProduct() async {
     String idRef = const Uuid().v1();
@@ -73,7 +249,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         _isCamera ? 1 : 0,
       );
 
-      await productService.insertProduct(productInsertModel).then((value) async {
+      await productService.insertProduct(0, productInsertModel).then((value) async {
         String colorStatus = await _addColor(idRef);
         String detailStatus = await _addDetail(idRef);
         String imageStatus = await _addImage(idRef);
@@ -91,7 +267,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               I18NTranslations.of(context).text('insert_product_success'),
               dialogType: DialogType.SUCCES,
               onCancelPress: () => NavigationHelper.push(context, const HomeScreen(dasboardEnum: DASBOARD_ENUM.homeScreen)),
-              onOkPress: () => NavigationHelper.push(context, const AddNewProductScreen()),
+              onOkPress: () => NavigationHelper.pushReplacement(context, const AddNewProductScreen()),
               btnOkText: I18NTranslations.of(context).text('add_more'),
               btnCancelText: I18NTranslations.of(context).text('go_to_home_screen'),
             );
@@ -109,7 +285,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     String status = '';
 
     for (int i = 0; i < _colorLength; i++) {
-      await productService.insertColor(idRef, _colorName[i].text, '0x' + _color[i].value.toRadixString(16)).then((value) {
+      await productService.insertColor(null, idRef, _colorName[i].text, '0x' + _color[i].value.toRadixString(16), 0).then((value) {
         status = value;
       });
     }
@@ -121,7 +297,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     String status = '';
 
     for (int i = 0; i < _detailLength; i++) {
-      await productService.insertDetail(idRef, _detailNameControllerList[i].text, _detailDescControllerList[i].text).then((value) {
+      await productService.insertDetail(null, idRef, _detailNameControllerList[i].text, _detailDescControllerList[i].text, 0).then((value) {
         status = value;
       });
     }
@@ -171,6 +347,47 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     _priceAfterDiscoutnController.text = result;
   }
 
+  //
+  void _onEditInit() {
+    if (widget.productModel != null) {
+      ProductModel model = widget.productModel!;
+      //
+      _nameController.text = model.name;
+      _isWrranty = model.isWarranty == 1;
+      _warrantyPeriodController.text = _isWrranty ? model.warrantyPeriod : '';
+
+      _priceController.text = model.price.toString();
+      _discountController.text = model.price.toString();
+      _priceAfterDiscoutnController.text = model.priceAfterDiscount.toString();
+      _minQtyController.text = model.minQty.toString();
+
+      //
+      if (model.colors.isNotEmpty) {
+        _colorName = List.generate(model.colors.length, (index) => TextEditingController());
+        _color = List.generate(model.colors.length, (index) => Colors.black);
+        _colorLength = model.colors.length;
+        for (var color in model.colors) {
+          _colorName[model.colors.indexOf(color)].text = color.color;
+          _color[model.colors.indexOf(color)] = Color(int.parse(color.colorCode));
+        }
+      }
+
+      if (model.details.isNotEmpty) {
+        _detailNameControllerList = List.generate(model.details.length, (index) => TextEditingController());
+        _detailDescControllerList = List.generate(model.details.length, (index) => TextEditingController());
+        _detailLength = model.details.length;
+        for (var detail in model.details) {
+          _detailNameControllerList[model.details.indexOf(detail)].text = detail.detail;
+          _detailDescControllerList[model.details.indexOf(detail)].text = detail.descs;
+        }
+      }
+    }
+
+    setState(() {});
+  }
+
+//
+
 //
   Future<void> _pickColor(int index) async {
     return showDialog<void>(
@@ -201,6 +418,22 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         );
       },
     );
+  }
+
+  @override
+  void initState() {
+    _onEditInit();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if (widget.productModel != null) {
+      widget.productModel!.colors.addAll(_deletedColor);
+      widget.productModel!.details.addAll(_deletedDetail);
+    }
   }
 
   @override
@@ -266,7 +499,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         hegith: 50,
         title: I18NTranslations.of(context).text('save'),
         onTap: () {
-          _addProduct();
+          widget.productModel != null ? _onUpdate() : _addProduct();
         },
         isShowShadow: true,
         backgroundColor: Colors.blue,
@@ -300,7 +533,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
               },
             ),
             const SizedBox(height: 20),
-            false ? _showImageWidget() : const SizedBox.shrink(),
+            widget.productModel != null ? _showImageWidget() : const SizedBox.shrink(),
           ],
         ),
       ),
@@ -308,26 +541,25 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   }
 
   Widget _showImageWidget() {
-    return Container();
-    // List<Widget> colorItemList = [];
-    // widget.productModel!.images.forEach((element) {
-    //   colorItemList.add(_showImageItem(element.image, widget.productModel!.images.indexOf(element)));
-    // });
+    List<Widget> colorItemList = [];
+    for (var element in widget.productModel!.images) {
+      colorItemList.add(_showImageItem(element.image, widget.productModel!.images.indexOf(element)));
+    }
 
-    // return Column(
-    //   crossAxisAlignment: CrossAxisAlignment.start,
-    //   children: [
-    //     Text('មាន\t' + widget.productModel!.images.length.toString() + "\tរូបភាព"),
-    //     SingleChildScrollView(
-    //       scrollDirection: Axis.horizontal,
-    //       child: Row(
-    //         children: List.generate(colorItemList.length, (index) {
-    //           return colorItemList[index];
-    //         }),
-    //       ),
-    //     ),
-    //   ],
-    // );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(I18NTranslations.of(context).text('has') + '\t' + widget.productModel!.images.length.toString() + "\t" + I18NTranslations.of(context).text('picture(s)')),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(colorItemList.length, (index) {
+              return colorItemList[index];
+            }),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _showImageItem(String path, int index) {
@@ -335,25 +567,25 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       children: [
         Container(
             margin: const EdgeInsets.all(10),
-            width: 120,
-            height: 120,
+            width: 90,
+            height: 90,
             child: DisplayImage(
               imageString: path,
-              boxFit: BoxFit.cover,
-              imageBorderRadius: 5,
+              boxFit: BoxFit.fill,
+              imageBorderRadius: 20,
             )),
-        // GestureDetector(
-        //   onTap: () {
-        //     setState(() {
-        //       deletedImage.add(widget.productModel!.images[index]);
-        //       widget.productModel!.images.removeAt(index);
-        //     });
-        //   },
-        //   child: Icon(
-        //     FontAwesomeIcons.times,
-        //     color: Colors.red,
-        //   ),
-        // )
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              deletedImage.add(widget.productModel!.images[index]);
+              widget.productModel!.images.removeAt(index);
+            });
+          },
+          child: const Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        )
       ],
     );
   }
@@ -413,6 +645,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                         _detailNameControllerList.removeAt(index);
                         _detailDescControllerList.removeAt(index);
                       });
+                    }
+
+                    if (widget.productModel != null) {
+                      _deletedDetail.add(widget.productModel!.details[index]);
+                      widget.productModel!.details.removeAt(index);
                     }
                   },
                   child: const Text('-')),
@@ -488,6 +725,12 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                         _color.removeAt(index);
                         _colorName.removeAt(index);
                       });
+                    }
+
+                    if (widget.productModel != null) {
+                      _deletedColor.add(widget.productModel!.colors[index]);
+
+                      widget.productModel!.colors.removeAt(index);
                     }
                   },
                   child: const Text('-')),

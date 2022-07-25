@@ -21,4 +21,9 @@ class HttpApi {
   static const String API_COLOR = '/color';
   static const String API_DETAIL = '/detail';
   static const String API_IMAGE = '/image';
+  static const String API_DELETE = '/delete';
+  static const String API_DELETE_IMAGE = '/delete-image';
+  static const String API_DELETE_COLOR = '/delete-color';
+  static const String API_DELETE_DETAIL = '/delete-detail';
+  static const String API_PRODUCT_BY_ID = '/product-by-id';
 }

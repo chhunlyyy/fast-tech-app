@@ -3,6 +3,7 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
+import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/widget/animation.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
@@ -57,18 +58,25 @@ class _CartScreenDashboardComponentState extends State<CartScreenDashboardCompon
     _size = MediaQuery.of(context).size;
     _cartModelList = Provider.of<CartModelProvider>(context).cartModelList;
     return Expanded(
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              _cartQtyWidget(),
-              _listCartWidget(),
-              const SizedBox(height: 250),
-            ],
-          ),
-          _cartModelList.isEmpty ? const SizedBox.shrink() : Positioned(bottom: 0, child: _chargeWidget()),
-        ],
-      ),
+      child: context.watch<UserRoleProvider>().isAdmin || context.watch<UserRoleProvider>().isSuperAdmin
+          ? Center(
+              child: Text(
+                I18NTranslations.of(context).text(I18NTranslations.of(context).text('feacture_for_user_only')),
+                style: TextStyle(color: ColorsConts.primaryColor),
+              ),
+            )
+          : Stack(
+              children: [
+                Column(
+                  children: [
+                    _cartQtyWidget(),
+                    _listCartWidget(),
+                    const SizedBox(height: 250),
+                  ],
+                ),
+                _cartModelList.isEmpty ? const SizedBox.shrink() : Positioned(bottom: 0, child: _chargeWidget()),
+              ],
+            ),
     );
   }
 

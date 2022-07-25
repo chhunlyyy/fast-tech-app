@@ -57,7 +57,7 @@ class HttpApiService {
   }
 
   /// Handy method to make http DELETE request, which is a alias of  [Dio.request].
-  Future delete(String endpoint, dynamic deleteData, Map<String, dynamic> queryParams, Options options) async {
+  Future delete(String endpoint, dynamic deleteData, Map<String, dynamic>? queryParams, Options options) async {
     String urlEndpoint = await _buildUrl(endpoint);
     Response response = await _dio.delete(urlEndpoint, data: deleteData, queryParameters: queryParams, options: options);
     return response;

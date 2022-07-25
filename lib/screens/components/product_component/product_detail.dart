@@ -4,10 +4,13 @@ import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
+import 'package:fast_tech_app/core/provider/user_role_provider.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
+import 'package:fast_tech_app/screens/add_new_product_screen/add_new_product_screen.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
+import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/add_to_cart_bottom_sheet.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
@@ -26,57 +29,19 @@ class ProductDetail extends StatefulWidget {
 
 class _ProductDetailState extends State<ProductDetail> {
   late int _imagePageCount = widget.productModel.images.isNotEmpty ? 1 : 0;
-  void _errorDialog() {
-    AwesomeDialog(
-      dismissOnTouchOutside: false,
-      context: context,
-      dialogType: DialogType.ERROR,
-      borderSide: BorderSide(color: ColorsConts.primaryColor, width: 2),
-      width: MediaQuery.of(context).size.width,
-      buttonsBorderRadius: const BorderRadius.all(Radius.circular(2)),
-      headerAnimationLoop: false,
-      animType: AnimType.BOTTOMSLIDE,
-      desc: 'មានបញ្ហាក្នុងពេលបញ្ចូលទិន្នន័យ',
-      showCloseIcon: false,
-      btnCancelOnPress: () {},
-      btnOkOnPress: () {},
-    ).show();
-  }
-
-  void _sucessDialog() {
-    AwesomeDialog(
-      dismissOnTouchOutside: false,
-      context: context,
-      dialogType: DialogType.SUCCES,
-      borderSide: BorderSide(color: ColorsConts.primaryColor, width: 2),
-      width: MediaQuery.of(context).size.width,
-      buttonsBorderRadius: const BorderRadius.all(Radius.circular(2)),
-      headerAnimationLoop: false,
-      animType: AnimType.BOTTOMSLIDE,
-      desc: 'ទិន្នន័យត្រូវបានលុប',
-      showCloseIcon: false,
-    ).show();
-  }
 
   void _onDelete() {
-    // List<String> imagePath = [];
-    // for (var image in widget.productModel.images) {
-    //   imagePath.add(image.image);
-    // }
+    productService.delete(widget.productModel.idRef.toString()).then((value) {
+      if (value == '200') {
+        DialogWidget.show(context, I18NTranslations.of(context).text('delete_sucessfully'), dialogType: DialogType.SUCCES);
 
-    // imageService.deleteImage(widget.productModel.images).then((value) {});
-    // productServices.deleteProduct(id: widget.productModel.id.toString()).then((value) {
-    //   if (value.status == '200') {
-    //     _sucessDialog();
-    //     widget.onDispose();
-    //     Future.delayed(const Duration(seconds: 2)).whenComplete(() {
-    //       Navigator.pop(context);
-    //       Navigator.pop(context);
-    //     });
-    //   } else {
-    //     _errorDialog();
-    //   }
-    // });
+        Future.delayed(const Duration(seconds: 2)).whenComplete(() {
+          NavigationHelper.pushReplacement(context, const HomeScreen(dasboardEnum: DASBOARD_ENUM.homeScreen));
+        });
+      } else {
+        DialogWidget.show(context, I18NTranslations.of(context).text('delete_unsucessfully'), dialogType: DialogType.ERROR);
+      }
+    });
   }
 
   @override
@@ -115,7 +80,7 @@ class _ProductDetailState extends State<ProductDetail> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: _addToCartWidget(),
+          child: (context.watch<UserRoleProvider>().isAdmin || context.watch<UserRoleProvider>().isSuperAdmin) ? _adminActionButton() : _addToCartWidget(),
         ),
       ],
     )));
@@ -153,48 +118,7 @@ class _ProductDetailState extends State<ProductDetail> {
             decoration: BoxDecoration(color: Colors.grey.withOpacity(.1), shape: BoxShape.circle),
           ),
           Expanded(child: Container()),
-
-          _cartWidget(),
-
-          // isShopOwner
-          //     ? AnimatedButton(
-          //         borderRadius: BorderRadius.circular(5),
-          //         width: 100,
-          //         height: 50,
-          //         pressEvent: () {
-          //           NavigationHelper.push(context, AddProductFormScreen(onDispose: widget.onDispose, productModel: widget.productModel, mainStore: widget.mainStore));
-          //         },
-          //         text: 'កែប្រែ',
-          //       )
-          //     : const SizedBox.shrink(),
-          const SizedBox(width: 10),
-          // isShopOwner
-          //     ? AnimatedButton(
-          //         color: Colors.red,
-          //         borderRadius: BorderRadius.circular(5),
-          //         width: 100,
-          //         height: 50,
-          //         pressEvent: () {
-          //           AwesomeDialog(
-          //             dismissOnTouchOutside: false,
-          //             context: context,
-          //             dialogType: DialogType.QUESTION,
-          //             borderSide: BorderSide(color: ColorsConts.primaryColor, width: 2),
-          //             width: MediaQuery.of(context).size.width,
-          //             buttonsBorderRadius: const BorderRadius.all(Radius.circular(2)),
-          //             headerAnimationLoop: false,
-          //             animType: AnimType.BOTTOMSLIDE,
-          //             desc: 'តើអ្នកពិតជាចង់លុបទិន្នន័យនេះមែនទេ ?',
-          //             showCloseIcon: false,
-          //             btnCancelOnPress: () {},
-          //             btnOkOnPress: () {
-          //               _onDelete();
-          //             },
-          //           ).show();
-          //         },
-          //         text: 'លុប',
-          //       )
-          //     : const SizedBox.shrink(),
+          context.watch<UserRoleProvider>().isAdmin || context.watch<UserRoleProvider>().isSuperAdmin ? const SizedBox.shrink() : _cartWidget(),
           const SizedBox(width: 20),
         ],
       ),
@@ -466,6 +390,37 @@ class _ProductDetailState extends State<ProductDetail> {
         )
       ],
     );
+  }
+
+  Widget _adminActionButton() {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+      Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: CustomeAnimatedButton(
+          title: I18NTranslations.of(context).text('edit'),
+          onTap: () {
+            NavigationHelper.push(context, AddNewProductScreen(productModel: widget.productModel));
+          },
+          isShowShadow: true,
+          width: MediaQuery.of(context).size.width / 2 - 20,
+          hegith: 50,
+          backgroundColor: Colors.blue,
+        ),
+      ),
+      Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        child: CustomeAnimatedButton(
+          title: I18NTranslations.of(context).text('delete'),
+          onTap: () {
+            DialogWidget.show(context, I18NTranslations.of(context).text('delete_product_question'), dialogType: DialogType.QUESTION, onCancelPress: () {}, onOkPress: _onDelete);
+          },
+          isShowShadow: true,
+          width: MediaQuery.of(context).size.width / 2 - 20,
+          hegith: 50,
+          backgroundColor: Colors.red,
+        ),
+      )
+    ]);
   }
 
   Widget _addToCartWidget() {

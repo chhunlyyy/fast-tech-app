@@ -9,6 +9,62 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 import 'package:path/path.dart';
 
 class ProductService {
+  Future<String> deleteDetail(String id) async {
+    Map<String, dynamic> postData = {
+      'id': id,
+    };
+
+    try {
+      return await httpApiService.delete(HttpApi.API_DELETE_DETAIL, postData, null, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '402';
+    }
+  }
+
+  Future<String> deleteColor(String id) async {
+    Map<String, dynamic> postData = {
+      'id': id,
+    };
+
+    try {
+      return await httpApiService.delete(HttpApi.API_DELETE_COLOR, postData, null, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '402';
+    }
+  }
+
+  Future<String> deleteImage(String id) async {
+    Map<String, dynamic> postData = {
+      'id': id,
+    };
+
+    try {
+      return await httpApiService.delete(HttpApi.API_DELETE_IMAGE, postData, null, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '402';
+    }
+  }
+
+  Future<String> delete(String idRef) async {
+    Map<String, dynamic> postData = {
+      'id_ref': idRef,
+    };
+
+    try {
+      return await httpApiService.delete(HttpApi.API_DELETE, postData, null, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '400';
+    }
+  }
+
   Future<String> insertImage(List<File> files, String imageIdRef) async {
     String result = '';
     Map<String, dynamic> postData = {
@@ -33,13 +89,9 @@ class ProductService {
     return result;
   }
 
-  Future<String> insertDetail(String idRef, String detail, String descs) async {
+  Future<String> insertDetail(String? id, String idRef, String detail, String descs, int isEdit) async {
     try {
-      Map<String, dynamic> params = {
-        'product_id_ref': idRef,
-        'detail': detail,
-        'descs': descs,
-      };
+      Map<String, dynamic> params = {'product_id_ref': idRef, 'detail': detail, 'descs': descs, 'id': id, 'is_edit': isEdit};
       return await httpApiService.post(HttpApi.API_DETAIL, params, null, Options(headers: HttpConfig.headers)).then((value) {
         return value.data['status'];
       });
@@ -48,12 +100,14 @@ class ProductService {
     }
   }
 
-  Future<String> insertColor(String idRef, String color, String colorCode) async {
+  Future<String> insertColor(int? id, String idRef, String color, String colorCode, int isEdit) async {
     try {
       Map<String, dynamic> params = {
+        'id': id,
         'product_id_ref': idRef,
         'color': color,
         'color_code': colorCode,
+        'is_edit': isEdit,
       };
       return await httpApiService.post(HttpApi.API_COLOR, params, null, Options(headers: HttpConfig.headers)).then((value) {
         return value.data['status'];
@@ -63,9 +117,10 @@ class ProductService {
     }
   }
 
-  Future<String> insertProduct(ProductInsertModel productInsertModel) async {
+  Future<String> insertProduct(int isEdit, ProductInsertModel productInsertModel) async {
     try {
       Map<String, dynamic> params = {
+        'is_edit': isEdit,
         'id_ref': productInsertModel.id_ref,
         'name': productInsertModel.name,
         'price': productInsertModel.price,
@@ -76,7 +131,6 @@ class ProductService {
         'min_qty': productInsertModel.min_qty,
         'is_camera': productInsertModel.is_camera,
       };
-      print(params);
       return await httpApiService.post(HttpApi.API_PRODUCT, params, null, Options(headers: HttpConfig.headers)).then((value) {
         return value.data['status'];
       });
@@ -123,6 +177,15 @@ class ProductService {
     } catch (e) {
       return [];
     }
+  }
+
+  Future<ProductModel> getProductById(int id) async {
+    Map<String, dynamic> params = {
+      'id': id,
+    };
+    return await httpApiService.get(HttpApi.API_PRODUCT_BY_ID, params, Options(headers: HttpConfig.headers)).then((value) {
+      return ProductModel.fromJson(value.data);
+    });
   }
 
   Future<List<ProductModel>> search({
