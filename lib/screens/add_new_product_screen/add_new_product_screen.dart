@@ -7,7 +7,6 @@ import 'package:fast_tech_app/core/models/product_insert_model.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/helper/file_picker_widget.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
-import 'package:fast_tech_app/screens/components/product_component/product_detail.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
@@ -357,7 +356,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       _warrantyPeriodController.text = _isWrranty ? model.warrantyPeriod : '';
 
       _priceController.text = model.price.toString();
-      _discountController.text = model.price.toString();
+      _discountController.text = model.discount.toString();
       _priceAfterDiscoutnController.text = model.priceAfterDiscount.toString();
       _minQtyController.text = model.minQty.toString();
 
