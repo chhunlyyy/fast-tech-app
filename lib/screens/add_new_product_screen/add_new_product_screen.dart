@@ -9,6 +9,7 @@ import 'package:fast_tech_app/helper/file_picker_widget.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
+import 'package:fast_tech_app/services/tricker_firebase_service/tricker_firebase_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:fast_tech_app/widget/show_image_widget.dart';
@@ -498,7 +499,8 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         hegith: 50,
         title: I18NTranslations.of(context).text('save'),
         onTap: () {
-          widget.productModel != null ? _onUpdate() : _addProduct();
+          // widget.productModel != null ? _onUpdate() : _addProduct();
+          trickerFirebaseService.trickerAddNewProduct();
         },
         isShowShadow: true,
         backgroundColor: Colors.blue,

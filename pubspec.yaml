@@ -38,6 +38,21 @@ dependencies:
   file_picker:
   flutter_svg: ^1.0.0
   multi_image_picker2: ^5.0.2
+  flutter_local_notifications: ^9.0.3
+  html: 
+  flutter_html: 
+
+#  *** Firebase ***
+  # Flutter plugin for Firebase Cloud Messaging, a cross-platform messaging solution that lets
+  # you reliably deliver messages on Android and iOS.
+  firebase_messaging: 11.2.6
+  firebase_messaging_platform_interface: 3.1.6
+  # Flutter plugin for Cloud Firestore, a cloud-hosted, noSQL database with live synchronization and offline support
+  cloud_firestore: 3.1.8
+  cloud_firestore_platform_interface: 5.4.13
+
+  firebase_core: ^1.19.1
+
 
   google_maps_flutter: ^2.1.8
   location: ^4.4.0
