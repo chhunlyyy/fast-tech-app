@@ -499,7 +499,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         hegith: 50,
         title: I18NTranslations.of(context).text('save'),
         onTap: () {
-          // widget.productModel != null ? _onUpdate() : _addProduct();
+          widget.productModel != null ? _onUpdate() : _addProduct();
           trickerFirebaseService.trickerAddNewProduct();
         },
         isShowShadow: true,
