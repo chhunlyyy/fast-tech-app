@@ -8,6 +8,7 @@ import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/screens/map_screen/user_map.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
+import 'package:fast_tech_app/services/tricker_firebase_service/tricker_firebase_service.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 
 import 'package:flutter/material.dart';
@@ -82,6 +83,7 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
   void _onOrderPickup(Map<String, dynamic> params) {
     orderService.order(params).then((value) {
       if (value == '200') {
+        trickerFirebaseService.trickerAddOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.name, Provider.of<UserModelProvider>(context, listen: false).userModel!.phone);
         DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
         Future.delayed(const Duration(seconds: 2)).whenComplete(() {
           Navigator.pop(context);
@@ -111,6 +113,7 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
         'address_id_ref': const Uuid().v4(),
       };
       orderService.order(params);
+      trickerFirebaseService.trickerAddOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.name, Provider.of<UserModelProvider>(context, listen: false).userModel!.phone);
     }
     DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
 
@@ -128,6 +131,7 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
   void _onDeliveryOrder(Map<String, dynamic> params) {
     orderService.deliveryOrder(params).then((value) {
       if (value == '200') {
+        trickerFirebaseService.trickerAddOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.name, Provider.of<UserModelProvider>(context, listen: false).userModel!.phone);
         DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
         Future.delayed(const Duration(seconds: 2)).whenComplete(() {
           Navigator.pop(context);
@@ -159,7 +163,9 @@ class _OrderBottomSheetBodyState extends State<OrderBottomSheetBody> {
         'longitude': longitude,
       };
       orderService.deliveryOrder(params);
+      trickerFirebaseService.trickerAddOrder(Provider.of<UserModelProvider>(context, listen: false).userModel!.name, Provider.of<UserModelProvider>(context, listen: false).userModel!.phone);
     }
+
     DialogWidget.show(context, I18NTranslations.of(context).text('order_success'), dialogType: DialogType.SUCCES);
 
     Future.delayed(const Duration(seconds: 2)).whenComplete(() {

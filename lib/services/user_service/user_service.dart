@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:fast_tech_app/core/models/user_model.dart';
 import 'package:fast_tech_app/core/provider/user_role_provider.dart';
+import 'package:fast_tech_app/services/firebase_service/firebase_service.dart';
 import 'package:fast_tech_app/services/http/http_api.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
@@ -58,9 +59,11 @@ class UserService {
       if (value.data['status'] == '200') {
         Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(false);
         Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(true);
+        firebaseNotifications.subscribeTopic('admin');
       } else if (value.data['status'] == '201') {
         Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(true);
         Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(false);
+        firebaseNotifications.subscribeTopic('admin');
       } else {
         Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(false);
         Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(false);
