@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1067297595473",
+    "project_id": "fasttechnotification",
+    "storage_bucket": "fasttechnotification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067297595473:android:0f977ca9c2f571e8b7d870",
+        "android_client_info": {
+          "package_name": "com.example.fast_tech_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067297595473-agjca3gf8vmsr9cpnpbg7t4g8453f51a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWGm1HUUllBbuhIF9ApG-VPds9Bd-nZyI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067297595473-agjca3gf8vmsr9cpnpbg7t4g8453f51a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
