@@ -57,7 +57,7 @@ class RegisterForm extends StatelessWidget {
         DialogWidget.show(context, I18NTranslations.of(context).text('input_all_fields'), dialogType: DialogType.WARNING);
       } else {
         Future.delayed(Duration.zero, () async {
-          String token = await DeviceInfoHelper.getDivceId();
+          String token = await DeviceInfoHelper.getDivceId() ?? '';
           Map<String, dynamic> params = {
             'name': _nameController.text,
             'phone': _phoneController.text,

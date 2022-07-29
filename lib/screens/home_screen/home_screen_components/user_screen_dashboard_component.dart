@@ -30,7 +30,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
 
   Future<void> _onLogout() async {
     TokenHelper.getInstance().setLogedIn(false);
-    userService.logout(_userModel!.phone, await DeviceInfoHelper.getDivceId());
+    userService.logout(_userModel!.phone, await DeviceInfoHelper.getDivceId() ?? '');
     NavigationHelper.pushReplacement(
         context,
         const LoginScreen(

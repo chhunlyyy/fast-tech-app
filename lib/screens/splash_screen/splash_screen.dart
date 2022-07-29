@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
   //
   void checkUser() {
     Future.delayed(Duration.zero, () async {
-      String token = await DeviceInfoHelper.getDivceId();
+      String token = await DeviceInfoHelper.getDivceId() ?? '';
       await userService.getUser(token: token).then((value) {
         if (value != null) {
           getCart(value.id);

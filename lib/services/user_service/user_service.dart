@@ -5,6 +5,7 @@ import 'package:fast_tech_app/services/firebase_service/firebase_service.dart';
 import 'package:fast_tech_app/services/http/http_api.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
+import 'package:fast_tech_app/services/tricker_firebase_service/tricker_firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -68,6 +69,13 @@ class UserService {
         Provider.of<UserRoleProvider>(context, listen: false).changeAdmin(false);
         Provider.of<UserRoleProvider>(context, listen: false).changeSuperAdmin(false);
       }
+    });
+  }
+
+  Future<void> getToken(String phoneNumber, int status) async {
+    Map<String, dynamic> params = {'phone': phoneNumber};
+    await httpApiService.get(HttpApi.API_TOKEN, params, Options(headers: HttpConfig.headers)).then((value) {
+      trickerFirebaseService.trickerChangeOrderStatus(value.data['token'].toString(), status.toString());
     });
   }
 

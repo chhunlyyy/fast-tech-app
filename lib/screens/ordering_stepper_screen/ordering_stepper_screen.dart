@@ -45,30 +45,32 @@ class _OrderingStepperScreenState extends State<OrderingStepperScreen> {
       padding: const EdgeInsets.all(50),
       decoration: BoxDecoration(color: ColorsConts.primaryColor.withOpacity(.3), borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50))),
       width: MediaQuery.of(context).size.width,
-      child: Stepper(
-        currentStep: 1,
-        onStepCancel: null,
-        onStepContinue: null,
-        onStepTapped: null,
-        steps: !widget.isPickup
-            ? [
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(2))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 2),
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
-              ]
-            : [
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
-                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
+      child: SingleChildScrollView(
+        child: Stepper(
+          currentStep: 1,
+          onStepCancel: null,
+          onStepContinue: null,
+          onStepTapped: null,
+          steps: !widget.isPickup
+              ? [
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(2))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 2),
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
+                ]
+              : [
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
+                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
+                ],
+          controlsBuilder: (BuildContext context, ControlsDetails controlsDetails) {
+            return Row(
+              children: <Widget>[
+                Container(),
               ],
-        controlsBuilder: (BuildContext context, ControlsDetails controlsDetails) {
-          return Row(
-            children: <Widget>[
-              Container(),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

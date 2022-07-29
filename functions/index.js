@@ -48,3 +48,38 @@ exports.addNewOrder = functions.firestore
         })
 
     });
+
+
+exports.chnageStatus = functions.firestore
+    .document('status/{id}').onCreate((snap, context) => {
+
+        var message = '';
+
+        if (snap.data().status == '1') {
+            message = 'ហាងបានទទួលការទិញរបស់អ្នក';
+        } else if (snap.data().status == '2') {
+            message = 'ហាងកំពុងដឹងជញ្ចូនទំនិញទៅទីតាំងរបស់អ្នក';
+        } else {
+            message = 'ការបញ្ជាទិញទំនិញរបស់លោកអ្នកបានបញ្ចប់រួចរាល់';
+        }
+
+        const payload = {
+            notification: {
+                title: 'ស្ថានភាពដាក់ទិញ',
+                body: message,
+                badge: '1',
+                sound: 'default',
+                click_action: 'FLUTTER_NOTIFICATION_CLICK',
+            },
+            data: {
+                title: 'ស្ថានភាពដាក់ទិញ',
+                body: message,
+            },
+        }
+
+        return admin.messaging().sendToDevice(snap.data().token, payload).then(() => {
+            console.log('------ success ------  ');
+            console.log(snap.data().token);
+        })
+
+    });

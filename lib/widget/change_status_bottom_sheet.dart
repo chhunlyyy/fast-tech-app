@@ -5,6 +5,7 @@ import 'package:fast_tech_app/core/provider/package_order_provider.dart';
 import 'package:fast_tech_app/core/provider/pickup_order_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
+import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/dialog_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +68,7 @@ class _ChangeOrderStatusWidgetState extends State<ChangeOrderStatusWidget> {
 
     orderService.updateOrderStatus(widget.orderModel.id.toString(), status, widget.isPacakge ? 1 : 0).then((value) {
       if (value == '200') {
+        userService.getToken(widget.orderModel.user.phone.toString(), status);
         DialogWidget.show(context, I18NTranslations.of(context).text('change_status_success'), dialogType: DialogType.SUCCES);
         getDeliveryOrder(userId);
         getPickupOrder(userId);

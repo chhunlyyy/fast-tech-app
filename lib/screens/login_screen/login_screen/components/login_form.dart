@@ -76,7 +76,7 @@ class _LoginFormState extends State<LoginForm> {
       if (_phoneController.text.isEmpty || _passwordController.text.isEmpty) {
         DialogWidget.show(context, I18NTranslations.of(context).text('input_all_fields'), dialogType: DialogType.WARNING);
       } else {
-        String token = await DeviceInfoHelper.getDivceId();
+        String token = await DeviceInfoHelper.getDivceId() ?? '';
         Map<String, dynamic> params = {'phone': _phoneController.text, 'password': _passwordController.text, 'token': token};
         await userService.login(params: params).then((value) {
           if (value['status'] == '200') {

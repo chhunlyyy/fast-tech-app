@@ -12,6 +12,13 @@ class TrickerFirebaseService {
       'phone': phone,
     });
   }
+
+  void trickerChangeOrderStatus(String token, String status) {
+    firebase.collection('status').doc().set({
+      'token': token,
+      'status': status,
+    });
+  }
 }
 
 TrickerFirebaseService trickerFirebaseService = TrickerFirebaseService();

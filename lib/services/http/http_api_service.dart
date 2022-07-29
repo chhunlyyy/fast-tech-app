@@ -4,8 +4,8 @@ import 'package:fast_tech_app/services/http/http_config.dart';
 class HttpApiService {
   // base_url
 
-  // var url = 'http://192.168.43.44:8000/api'; // set local host
-  var url = 'http://192.168.70.103:8000/api'; // set local host
+  var url = 'http://192.168.43.44:8000/api'; // set local host
+  // var url = 'http://192.168.70.103:8000/api'; // set local host
 
   ///
   final Dio _dio = Dio(BaseOptions(
