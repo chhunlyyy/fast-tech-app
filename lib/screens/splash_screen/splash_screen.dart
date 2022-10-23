@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
           else
             {
               Future.delayed(Duration.zero, () {
-                WidgetsBinding.instance?.addPostFrameCallback((_) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
                   context.read<I18nProvider>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
                 });
               }).whenComplete(() => NavigationHelper.pushReplacement(

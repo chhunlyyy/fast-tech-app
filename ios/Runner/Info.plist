@@ -54,5 +54,7 @@
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>Your location is required.</string>
 
-	</dict>
+		<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+</dict>
 </plist>

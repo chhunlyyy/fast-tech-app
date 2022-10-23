@@ -42,7 +42,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
   @override
   Widget build(BuildContext context) {
     _userModel = Provider.of<UserModelProvider>(context).userModel;
-    return TokenHelper.getInstance().isLogedIn() ? _userWidget() : _notYetLogInWidget();
+    return TokenHelper.getInstance().isLogedIn() && _userModel != null ? _userWidget() : _notYetLogInWidget();
   }
 
   Widget _userWidget() {

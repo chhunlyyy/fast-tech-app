@@ -14,7 +14,9 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class SearchScreen extends StatefulWidget {
   final TextEditingController textEditingController;
-  const SearchScreen({Key? key, required this.textEditingController}) : super(key: key);
+  final TextEditingController startPriceConttroller;
+  final TextEditingController toPriceController;
+  const SearchScreen({Key? key, required this.textEditingController, required this.startPriceConttroller, required this.toPriceController}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -33,7 +35,15 @@ class _SearchScreenState extends State<SearchScreen> {
       _pageIndex = isRefresh ? 0 : _pageIndex + 1;
       //
       Future.delayed(Duration.zero, () async {
-        await productService.search(pageSize: _pageSize, pageIndex: _pageIndex, productName: widget.textEditingController.text).then((value) {
+        await productService
+            .search(
+          pageSize: _pageSize,
+          pageIndex: _pageIndex,
+          productName: widget.textEditingController.text,
+          toPrice: widget.toPriceController.text,
+          startPrice: widget.startPriceConttroller.text,
+        )
+            .then((value) {
           setState(() {
             if (isRefresh) {
               _loadingStatusEnum = LoadingStatusEnum.loading;
@@ -98,9 +108,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
               Expanded(
-                  child: SearchWidget.searchWidget(context, () {
-                _getAllProducts(true);
-              }, widget.textEditingController)),
+                  child: SearchWidget.searchWidget(
+                context,
+                () {
+                  _getAllProducts(true);
+                },
+                widget.textEditingController,
+                widget.startPriceConttroller,
+                widget.toPriceController,
+              )),
             ],
           ),
           Expanded(

@@ -192,12 +192,16 @@ class ProductService {
     int pageSize = 10,
     int pageIndex = 0,
     String productName = '',
+    String startPrice = '',
+    String toPrice = '',
   }) async {
     try {
       Map<String, dynamic> params = {
         'pageSize': pageSize,
         'pageIndex': pageIndex,
         'product_name': productName,
+        'start_price': startPrice,
+        'to_price': toPrice,
       };
       return await httpApiService.get(HttpApi.API_SEARCH, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));

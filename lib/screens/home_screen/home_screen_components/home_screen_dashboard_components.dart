@@ -28,6 +28,8 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
   List<ProductModel> _productModelList = [];
   LoadingStatusEnum _loadingStatusEnum = LoadingStatusEnum.loading;
   final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _startPriceController = TextEditingController();
+  final TextEditingController _toPriceController = TextEditingController();
   int _pageIndex = 0;
   final int _pageSize = 10;
 
@@ -77,15 +79,19 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
                   SearchWidget.searchWidget(
                     context,
                     () {
-                      if (_textEditingController.text.isNotEmpty) {
+                      if (_textEditingController.text.isNotEmpty || _toPriceController.text.isNotEmpty || _startPriceController.text.isNotEmpty) {
                         NavigationHelper.push(
                             context,
                             SearchScreen(
                               textEditingController: _textEditingController,
+                              startPriceConttroller: _startPriceController,
+                              toPriceController: _toPriceController,
                             ));
                       }
                     },
                     _textEditingController,
+                    _startPriceController,
+                    _toPriceController,
                   ),
                   _textLabel(false),
                   _productTypeWidget(),
@@ -165,7 +171,7 @@ class _HomeScreenDashboardComponentsState extends State<HomeScreenDashboardCompo
         child: Stack(
       children: [
         Container(
-          height: 120,
+          height: 90,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
