@@ -60,6 +60,8 @@
     "warranty_duration": "Warranty Duration",
     "add_color": "Add Color",
     "pick_color": "Pick Color",
+    "no_report":"No Report Found !",
+    "report":"Report",
     "plz_insert_all_info": "Please Insert All Information",
     "price": "Price",
     "wrong_username": "Wrong Username and Password",

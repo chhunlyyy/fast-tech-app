@@ -3,6 +3,7 @@ import 'package:fast_tech_app/core/models/cart_model.dart';
 import 'package:fast_tech_app/core/models/delivery_order_model.dart';
 import 'package:fast_tech_app/core/models/package_order_model.dart';
 import 'package:fast_tech_app/core/models/pickup_order_model.dart';
+import 'package:fast_tech_app/screens/report/invoice.dart';
 import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/http/http_config.dart';
 
@@ -107,6 +108,12 @@ class OrderService {
     } catch (e) {
       return '400';
     }
+  }
+
+  Future<List<InvoiceModel>> getInvoices(Map<String, dynamic> params) async {
+    return await httpApiService.get(HttpApi.API_ORDER_REPORT, params, Options(headers: HttpConfig.headers)).then((value) {
+      return List<InvoiceModel>.from(value.data.map((x) => InvoiceModel.fromJson(x)));
+    });
   }
 
   Future<String> addToCart(int productId, int userId, int qty, int colorId) async {

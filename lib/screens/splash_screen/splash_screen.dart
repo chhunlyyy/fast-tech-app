@@ -1,4 +1,3 @@
-import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/provider/cart_provider.dart';
 import 'package:fast_tech_app/core/provider/i18n_provider.dart';
 import 'package:fast_tech_app/core/provider/user_model_provider.dart';
@@ -58,9 +57,11 @@ class _SplashScreenState extends State<SplashScreen> {
           else
             {
               Future.delayed(Duration.zero, () {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  context.read<I18nProvider>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
-                });
+                if (mounted) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    context.read<I18nProvider>().setLanguageCode(TokenHelper.getInstance().getLanguageCode);
+                  });
+                }
               }).whenComplete(() => NavigationHelper.pushReplacement(
                     context,
                     const HomeScreen(
@@ -93,7 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
-      color: ColorsConts.primaryColor,
+      color: Colors.white,
       child: SingleChildScrollView(
         child: AnimationLimiter(
           child: Column(

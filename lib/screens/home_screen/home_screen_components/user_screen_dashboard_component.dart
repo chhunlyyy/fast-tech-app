@@ -11,6 +11,7 @@ import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
 import 'package:fast_tech_app/screens/order_screen/done_order_screen.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/screens/permission_setting_screen/permission_setting_screen.dart';
+import 'package:fast_tech_app/screens/report/report_screen.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,9 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
             : const SizedBox.shrink(),
         context.watch<UserRoleProvider>().isSuperAdmin
             ? _buildBotton('permission_setting', FontAwesomeIcons.key, Colors.deepPurple, () => NavigationHelper.push(context, const PermissionSettingScreen()))
+            : const SizedBox.shrink(),
+        context.watch<UserRoleProvider>().isSuperAdmin
+            ? _buildBotton('report', FontAwesomeIcons.bookOpen, Colors.deepOrange, () => NavigationHelper.push(context, const ReportScreen()))
             : const SizedBox.shrink(),
         const SizedBox(height: 50),
         _logoutButton(),

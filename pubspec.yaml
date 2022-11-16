@@ -20,6 +20,9 @@ dependencies:
   flutter_staggered_animations: "^1.0.0"
   shared_preferences: ^2.0.15
   lottie: ^1.3.0
+  pdf: ^3.8.4
+  google_fonts: ^3.0.1
+  printing: ^5.9.3
   package_info:
   provider: ^6.0.3
   font_awesome_flutter: ^10.1.0
@@ -70,6 +73,7 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/svg/
+    - assets/
 
 
   uses-material-design: true

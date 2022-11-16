@@ -172,7 +172,9 @@ class _AddToCartBottomSheetBodyState extends State<AddToCartBottomSheetBody> {
             };
             Navigator.pop(context);
             Future.delayed(const Duration(milliseconds: 200)).whenComplete(() {
-              OrderBottomSheet().show(context, [], params);
+              if (mounted) {
+                OrderBottomSheet().show(context, [], params);
+              }
             });
           }
         } else {
