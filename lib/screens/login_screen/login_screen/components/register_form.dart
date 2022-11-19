@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class RegisterForm extends StatelessWidget {
+class RegisterForm extends StatefulWidget {
   const RegisterForm({
     Key? key,
     required this.isLogin,
@@ -31,13 +31,17 @@ class RegisterForm extends StatelessWidget {
   final double defaultLoginSize;
 
   @override
-  Widget build(BuildContext context) {
-    //
-    TextEditingController _phoneController = TextEditingController();
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-    //
+  State<RegisterForm> createState() => _RegisterFormState();
+}
 
+class _RegisterFormState extends State<RegisterForm> {
+  //
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  //
+  @override
+  Widget build(BuildContext context) {
     void _onReisterSuccess(UserModel userModel) {
       DialogWidget.show(context, I18NTranslations.of(context).text('success_register'), dialogType: DialogType.SUCCES);
       Future.delayed(const Duration(seconds: 2)).whenComplete(() {
@@ -77,15 +81,15 @@ class RegisterForm extends StatelessWidget {
     }
 
     return AnimatedOpacity(
-      opacity: isLogin ? 0.0 : 1.0,
-      duration: animationDuration * 5,
+      opacity: widget.isLogin ? 0.0 : 1.0,
+      duration: widget.animationDuration * 5,
       child: Visibility(
-        visible: !isLogin,
+        visible: !widget.isLogin,
         child: Align(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
-            width: size.width,
-            height: defaultLoginSize,
+            width: widget.size.width,
+            height: widget.defaultLoginSize,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

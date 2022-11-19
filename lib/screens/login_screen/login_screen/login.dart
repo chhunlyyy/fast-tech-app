@@ -1,11 +1,11 @@
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/screens/login_screen/constants.dart';
+import 'package:fast_tech_app/screens/login_screen/login_screen/components/login_form.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/components/register_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'components/cancel_button.dart';
-import 'components/login_form.dart';
 
 class LoginScreen extends StatefulWidget {
   final bool fromAddToCart;
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     double viewInset = MediaQuery.of(context).viewInsets.bottom; // we are using this to determine Keyboard is opened or not
     double defaultLoginSize = size.height - (size.height * 0.2);
     double defaultRegisterSize = size.height - (size.height * 0.1);
-
+    TextEditingController _phoneController = TextEditingController();
     containerSize = Tween<double>(begin: size.height * 0.1, end: defaultRegisterSize).animate(CurvedAnimation(parent: animationController, curve: Curves.linear));
 
     return Scaffold(
@@ -126,8 +126,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                   } else if (!isLogin) {
                     return buildRegisterContainer();
                   }
-
-                  // Returning empty container to hide the widget
                   return Container();
                 },
               ),
