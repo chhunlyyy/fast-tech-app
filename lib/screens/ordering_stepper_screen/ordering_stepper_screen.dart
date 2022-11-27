@@ -31,7 +31,8 @@ class _OrderingStepperScreenState extends State<OrderingStepperScreen> {
   }
 
   Widget _buildBody() {
-    return Column(
+    return ListView(
+      shrinkWrap: true,
       children: [
         _detailWidget(),
         const Spacer(),
