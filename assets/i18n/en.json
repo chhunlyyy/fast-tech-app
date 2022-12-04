@@ -91,6 +91,7 @@
     "done": "done",
     "current_locatoin": "Current Location",
     "map": "Map",
+    "camera.type":"Camera Type",
     "confirm_location_question": "Do you want us to develivery to this location?",
     "plz_pick_camera": "Please pick a camera",
     "see_detail": "see detail",

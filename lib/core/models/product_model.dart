@@ -19,6 +19,8 @@ class ProductModel {
     required this.images,
     required this.details,
     required this.isCamera,
+    required this.cameraType,
+    required this.cameraTypeId,
   });
 
   int id;
@@ -31,6 +33,8 @@ class ProductModel {
   String warrantyPeriod;
   int minQty;
   int isCamera;
+  int? cameraTypeId;
+  String? cameraType;
   List<ColorModel> colors;
   List<ImageModel> images;
   List<DetailModel> details;
@@ -45,6 +49,8 @@ class ProductModel {
         isWarranty: json["is_warranty"],
         warrantyPeriod: json["warranty_period"],
         minQty: json["min_qty"],
+        cameraTypeId: json["camera_type_id"],
+        cameraType: json["camera_type"],
         isCamera: json["is_camera"],
         colors: List<ColorModel>.from(json["colors"].map((x) => ColorModel.fromJson(x))),
         images: List<ImageModel>.from(json["images"].map((x) => ImageModel.fromJson(x))),

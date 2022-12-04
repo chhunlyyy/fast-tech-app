@@ -31,12 +31,11 @@ class _OrderingStepperScreenState extends State<OrderingStepperScreen> {
   }
 
   Widget _buildBody() {
-    return ListView(
-      shrinkWrap: true,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _detailWidget(),
-        const Spacer(),
-        _stepperWidget(),
+        Expanded(flex: 2, child: _detailWidget()),
+        Expanded(flex: 3, child: _stepperWidget()),
       ],
     );
   }
@@ -46,32 +45,30 @@ class _OrderingStepperScreenState extends State<OrderingStepperScreen> {
       padding: const EdgeInsets.all(50),
       decoration: BoxDecoration(color: ColorsConts.primaryColor.withOpacity(.3), borderRadius: const BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50))),
       width: MediaQuery.of(context).size.width,
-      child: SingleChildScrollView(
-        child: Stepper(
-          currentStep: 1,
-          onStepCancel: null,
-          onStepContinue: null,
-          onStepTapped: null,
-          steps: !widget.isPickup
-              ? [
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(2))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 2),
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
-                ]
-              : [
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
-                  Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
-                ],
-          controlsBuilder: (BuildContext context, ControlsDetails controlsDetails) {
-            return Row(
-              children: <Widget>[
-                Container(),
+      child: Stepper(
+        currentStep: 1,
+        onStepCancel: null,
+        onStepContinue: null,
+        onStepTapped: null,
+        steps: !widget.isPickup
+            ? [
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(2))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 2),
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
+              ]
+            : [
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(0))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 0),
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(1))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 1),
+                Step(title: Text(I18NTranslations.of(context).text(OrderStatusHelper.getDesc(3))), content: const SizedBox.shrink(), isActive: widget.orderModel.status == 3),
               ],
-            );
-          },
-        ),
+        controlsBuilder: (BuildContext context, ControlsDetails controlsDetails) {
+          return Row(
+            children: <Widget>[
+              Container(),
+            ],
+          );
+        },
       ),
     );
   }
@@ -82,63 +79,66 @@ class _OrderingStepperScreenState extends State<OrderingStepperScreen> {
       padding: const EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(color: ColorsConts.primaryColor.withOpacity(.5), borderRadius: BorderRadius.circular(20)),
-      child: Column(children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(child: Center(child: Text(I18NTranslations.of(context).text('user_name') + '\t:\t' + widget.orderModel.user.name))),
-            Expanded(child: Center(child: Text(I18NTranslations.of(context).text('phone_number') + '\t:\t' + widget.orderModel.user.phone))),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(color: Colors.white38, borderRadius: BorderRadius.circular(20)),
-          child: Column(children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 80,
-                  height: 80,
-                  child: DisplayImage(
-                    imageString: widget.orderModel.product.images[0].image,
-                    imageBorderRadius: 1,
-                    boxFit: BoxFit.cover,
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(child: Center(child: Text(I18NTranslations.of(context).text('user_name') + '\t:\t' + widget.orderModel.user.name))),
+              Expanded(child: Center(child: Text(I18NTranslations.of(context).text('phone_number') + '\t:\t' + widget.orderModel.user.phone))),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(color: Colors.white38, borderRadius: BorderRadius.circular(20)),
+            child: Column(children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: DisplayImage(
+                      imageString: widget.orderModel.product.images[0].image,
+                      imageBorderRadius: 1,
+                      boxFit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Expanded(
-                    child: Center(
-                  child: Text(widget.orderModel.product.name),
-                )),
-              ],
-            ),
-            const SizedBox(height: 10),
-            !widget.isPackage
-                ? Row(
-                    children: [
-                      Expanded(
-                          child: Center(
-                        child: Column(
-                          children: [
-                            Text(I18NTranslations.of(context).text('qty')),
-                            Text(widget.orderModel.qty.toString()),
-                          ],
-                        ),
-                      )),
-                      Expanded(
-                          child: Center(
-                        child: Column(
-                          children: [
-                            Text(I18NTranslations.of(context).text('total_price')),
-                            Text((widget.orderModel.qty * widget.orderModel.product.priceAfterDiscount).toString()),
-                          ],
-                        ),
-                      )),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-          ]),
-        ),
-      ]),
+                  Expanded(
+                      child: Center(
+                    child: Text(widget.orderModel.product.name),
+                  )),
+                ],
+              ),
+              const SizedBox(height: 10),
+              !widget.isPackage
+                  ? Row(
+                      children: [
+                        Expanded(
+                            child: Center(
+                          child: Column(
+                            children: [
+                              Text(I18NTranslations.of(context).text('qty')),
+                              Text(widget.orderModel.qty.toString()),
+                            ],
+                          ),
+                        )),
+                        Expanded(
+                            child: Center(
+                          child: Column(
+                            children: [
+                              Text(I18NTranslations.of(context).text('total_price')),
+                              Text((widget.orderModel.qty * widget.orderModel.product.priceAfterDiscount).toString()),
+                            ],
+                          ),
+                        )),
+                      ],
+                    )
+                  : const SizedBox.shrink(),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }

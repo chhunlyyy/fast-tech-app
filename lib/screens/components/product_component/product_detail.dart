@@ -168,10 +168,29 @@ class _ProductDetailState extends State<ProductDetail> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _priceWidget(),
+        widget.productModel.cameraTypeId == null ? const SizedBox.shrink() : _cameraTypeWidget(),
         widget.productModel.colors.isNotEmpty ? _label(I18NTranslations.of(context).text('color')) : const SizedBox.shrink(),
         widget.productModel.colors.isNotEmpty ? _colorWidget() : const SizedBox.shrink(),
         widget.productModel.colors.isNotEmpty ? _label(I18NTranslations.of(context).text('detail')) : const SizedBox.shrink(),
         widget.productModel.colors.isNotEmpty ? _detail() : const SizedBox.shrink(),
+      ],
+    );
+  }
+
+  Widget _cameraTypeWidget() {
+    return Column(
+      children: [
+        widget.productModel.colors.isNotEmpty ? _label(I18NTranslations.of(context).text('camera.type')) : const SizedBox.shrink(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(I18NTranslations.of(context).text('camera.type') + '\t:\t', style: TextStyle(color: ColorsConts.primaryColor)),
+              Expanded(child: Text(widget.productModel.cameraType!)),
+            ],
+          ),
+        ),
       ],
     );
   }

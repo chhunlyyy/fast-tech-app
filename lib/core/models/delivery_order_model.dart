@@ -78,6 +78,8 @@ class Product {
     required this.images,
     required this.details,
     required this.address,
+    required this.cameraType,
+    required this.cameraTypeId,
   });
 
   int id;
@@ -90,6 +92,8 @@ class Product {
   String warrantyPeriod;
   int minQty;
   int isCamera;
+  int? cameraTypeId;
+  String? cameraType;
   List<ColorModel> colors;
   List<ImageModel> images;
   List<DetailModel> details;
@@ -101,6 +105,8 @@ class Product {
         name: json["name"],
         price: json["price"],
         discount: json["discount"],
+        cameraTypeId: json["camera_type_id"],
+        cameraType: json["camera_type"],
         priceAfterDiscount: json["price_after_discount"],
         isWarranty: json["is_warranty"],
         warrantyPeriod: json["warranty_period"],

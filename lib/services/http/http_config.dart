@@ -5,7 +5,7 @@ class HttpConfig {
   static const String CLIENT_NAME = "CLIENT-NAME";
   static const String CLIENT_NAME_EN = "CLIENT-NAME-EN";
   static const String CLIENT_SECRET = "CLIENT-SECRET";
-  static const String CLIENT_BASE_URL = "http://192.168.1.5:8000"; // local host
+  static const String CLIENT_BASE_URL = "http://192.168.0.21:8000"; // local host
   static const String CLIENT_LOGO_URL = "CLIENT-LOGO-URL";
   static const String CLIENT_BACKGROUND_MOBILE_URL = "CLIENT-BACKGROUND-MOBILE-URL";
   static const String CLIENT_BACKGROUND_WEB_URL = "CLIENT-BACKGROUND-WEB-URL";

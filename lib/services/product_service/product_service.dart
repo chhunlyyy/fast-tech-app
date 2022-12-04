@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:fast_tech_app/core/models/camera_type_model.dart';
 import 'package:fast_tech_app/core/models/product_insert_model.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/services/http/http_api.dart';
@@ -130,6 +131,7 @@ class ProductService {
         'warranty_period': productInsertModel.warranty_period,
         'min_qty': productInsertModel.min_qty,
         'is_camera': productInsertModel.is_camera,
+        'camera_type_id': productInsertModel.camera_type_id,
       };
       return await httpApiService.post(HttpApi.API_PRODUCT, params, null, Options(headers: HttpConfig.headers)).then((value) {
         return value.data['status'];
@@ -205,6 +207,16 @@ class ProductService {
       };
       return await httpApiService.get(HttpApi.API_SEARCH, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));
+      });
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<CameraTypeModel>> getCameraTypeModels() async {
+    try {
+      return await httpApiService.get(HttpApi.API_CAMERAY_TYPE, null, Options(headers: HttpConfig.headers)).then((value) {
+        return List<CameraTypeModel>.from(value.data.map((x) => CameraTypeModel.fromJson(x)));
       });
     } catch (e) {
       return [];

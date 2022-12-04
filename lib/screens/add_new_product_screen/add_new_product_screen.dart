@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
+import 'package:fast_tech_app/core/models/camera_type_model.dart';
 import 'package:fast_tech_app/core/models/product_insert_model.dart';
 import 'package:fast_tech_app/core/models/product_model.dart';
 import 'package:fast_tech_app/helper/file_picker_widget.dart';
 import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/add_new_product_screen/get_camera_type_bottom_sheet.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
 import 'package:fast_tech_app/services/product_service/product_service.dart';
 import 'package:fast_tech_app/services/tricker_firebase_service/tricker_firebase_service.dart';
@@ -60,23 +62,39 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
   List<TextEditingController> _detailDescControllerList = List.generate(1, (index) => TextEditingController());
   /* */
 
+  final TextEditingController _cameraTypeController = TextEditingController();
+
+  List<CameraTypeModel> cameratypeModel = [];
+
+  late CameraTypeModel _seletedCameraType;
+
   /*
    * add proudct function 
    */
 
+  void _loadCameratype() {
+    Future.delayed(Duration.zero, () async {
+      await productService.getCameraTypeModels().then((value) {
+        setState(() {
+          cameratypeModel = value;
+        });
+      });
+    });
+  }
+
   void _onUpdate() async {
     if (_checkValidation(true)) {
       ProductInsertModel productInsertModel = ProductInsertModel(
-        widget.productModel!.idRef,
-        _nameController.text,
-        double.parse(_priceController.text),
-        double.parse(_discountController.text),
-        _isWrranty ? 1 : 0,
-        int.parse(_minQtyController.text),
-        double.parse(_priceAfterDiscoutnController.text),
-        _isWrranty ? _warrantyPeriodController.text : 'no warranty',
-        _isCamera ? 1 : 0,
-      );
+          widget.productModel!.idRef,
+          _nameController.text,
+          double.parse(_priceController.text),
+          double.parse(_discountController.text),
+          _isWrranty ? 1 : 0,
+          int.parse(_minQtyController.text),
+          double.parse(_priceAfterDiscoutnController.text),
+          _isWrranty ? _warrantyPeriodController.text : 'no warranty',
+          _isCamera ? 1 : 0,
+          _cameraTypeController.text.isEmpty ? null : _seletedCameraType.id);
       setState(() {
         _isLoading = true;
       });
@@ -238,16 +256,16 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
 
     if (_checkValidation(false)) {
       ProductInsertModel productInsertModel = ProductInsertModel(
-        idRef,
-        _nameController.text,
-        double.parse(_priceController.text),
-        double.parse(_discountController.text),
-        _isWrranty ? 1 : 0,
-        int.parse(_minQtyController.text),
-        double.parse(_priceAfterDiscoutnController.text),
-        _isWrranty ? _warrantyPeriodController.text : 'no warranty',
-        _isCamera ? 1 : 0,
-      );
+          idRef,
+          _nameController.text,
+          double.parse(_priceController.text),
+          double.parse(_discountController.text),
+          _isWrranty ? 1 : 0,
+          int.parse(_minQtyController.text),
+          double.parse(_priceAfterDiscoutnController.text),
+          _isWrranty ? _warrantyPeriodController.text : 'no warranty',
+          _isCamera ? 1 : 0,
+          _cameraTypeController.text.isEmpty ? null : _seletedCameraType.id);
 
       await productService.insertProduct(0, productInsertModel).then((value) async {
         String colorStatus = await _addColor(idRef);
@@ -277,7 +295,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         });
       });
     } else {
-      DialogWidget.show(context, 'plz_insert_all_info', dialogType: DialogType.WARNING);
+      DialogWidget.show(context, I18NTranslations.of(context).text('plz_insert_all_info'), dialogType: DialogType.WARNING);
     }
   }
 
@@ -321,7 +339,11 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
     bool result = false;
     late bool imagevalidate;
     bool warrantyValidate = true;
+    bool cameratypeValidate = true;
 
+    if (_isCamera) {
+      cameratypeValidate = _cameraTypeController.text.isNotEmpty;
+    }
     if (!isEdit) {
       imagevalidate = productImages.isNotEmpty;
     } else {
@@ -331,7 +353,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       warrantyValidate = false;
     }
 
-    if (_nameController.text.isNotEmpty && warrantyValidate && _priceController.text.isNotEmpty && _priceAfterDiscoutnController.text.isNotEmpty && imagevalidate) {
+    if (_nameController.text.isNotEmpty && warrantyValidate && _priceController.text.isNotEmpty && _priceAfterDiscoutnController.text.isNotEmpty && imagevalidate && cameratypeValidate) {
       result = true;
     }
     return result;
@@ -422,6 +444,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
 
   @override
   void initState() {
+    _loadCameratype();
     _onEditInit();
     super.initState();
   }
@@ -450,7 +473,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
         body: Stack(
           children: [
             _buildBody(),
-            _isLoading ? _loadingWidget() : const SizedBox.shrink(),
+            _isLoading || cameratypeModel.isEmpty ? _loadingWidget() : const SizedBox.shrink(),
           ],
         ),
       ),
@@ -761,6 +784,16 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
           Row(
             children: [Expanded(child: _warrantyCheckBox()), Expanded(child: _isCameraCheckBox())],
           ),
+          _isCamera
+              ? InkWell(
+                  onTap: () => GetCameraTypeBottomSheet.show(context, cameratypeModel, ((cameratypeModel) {
+                        setState(() {
+                          _seletedCameraType = cameratypeModel;
+                          _cameraTypeController.text = cameratypeModel.type ?? '';
+                        });
+                      })),
+                  child: _buildTextInput('camera.type', _cameraTypeController, enabled: false))
+              : const SizedBox.shrink(),
           _isWrranty ? _buildTextInput('warranty_duration', _warrantyPeriodController) : const SizedBox.shrink(),
           const SizedBox(height: 10),
         ],
