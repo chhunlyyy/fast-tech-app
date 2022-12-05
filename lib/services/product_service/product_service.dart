@@ -222,6 +222,17 @@ class ProductService {
       return [];
     }
   }
+
+  Future<String> insertCameraType(String type) async {
+    try {
+      Map<String, dynamic> params = {'type': type};
+      return await httpApiService.post(HttpApi.API_CAMERAY_TYPE, params, null, Options(headers: HttpConfig.headers)).then((value) {
+        return value.data['status'];
+      });
+    } catch (e) {
+      return '400';
+    }
+  }
 }
 
 ProductService productService = ProductService();

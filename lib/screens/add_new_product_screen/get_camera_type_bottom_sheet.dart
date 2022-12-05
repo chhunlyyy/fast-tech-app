@@ -1,6 +1,8 @@
 import 'package:fast_tech_app/const/color_conts.dart';
 import 'package:fast_tech_app/core/i18n/i18n_translate.dart';
 import 'package:fast_tech_app/core/models/camera_type_model.dart';
+import 'package:fast_tech_app/helper/navigation_helper.dart';
+import 'package:fast_tech_app/screens/add_camera_type/add_camera_type.dart';
 import 'package:flutter/material.dart';
 
 class GetCameraTypeBottomSheet {
@@ -39,12 +41,17 @@ class _GetCameraTypeBottomSheetBodyState extends State<GetCameraTypeBottomSheetB
           Row(
             children: [
               Expanded(child: Center(child: Text(I18NTranslations.of(context).text('camera.type'), style: TextStyle(color: ColorsConts.primaryColor)))),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Icon(
-                  Icons.add,
-                  color: Colors.green,
-                  size: 30,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: InkWell(
+                  onTap: () {
+                    NavigationHelper.push(context, const AddCameraTypeScreen());
+                  },
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.green,
+                    size: 30,
+                  ),
                 ),
               ),
             ],
