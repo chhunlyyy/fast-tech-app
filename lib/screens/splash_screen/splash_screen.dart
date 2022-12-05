@@ -6,6 +6,7 @@ import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/choose_language_screen/choose_language_screen.dart';
 import 'package:fast_tech_app/screens/home_screen/home_screen.dart';
+import 'package:fast_tech_app/services/http/http_api_service.dart';
 import 'package:fast_tech_app/services/order_service/order_service.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
+    // Future.delayed(Duration.zero, () async {
+    //   await FirebaseFirestore.instance.collection('url').doc().get().then((value) {
+    //     httpApiService.url = value.data()!['value'];
+    //   });
+    // });
+    httpApiService.url = 'http://192.168.43.44:8000/api';
     super.initState();
 
     if (TokenHelper.getInstance().isLogedIn()) {
