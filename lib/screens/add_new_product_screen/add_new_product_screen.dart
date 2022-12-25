@@ -784,6 +784,7 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
           Row(
             children: [Expanded(child: _warrantyCheckBox()), Expanded(child: _isCameraCheckBox())],
           ),
+          _isWrranty ? _buildTextInput('warranty_duration', _warrantyPeriodController) : const SizedBox.shrink(),
           _isCamera
               ? InkWell(
                   onTap: () => GetCameraTypeBottomSheet.show(context, cameratypeModel, ((cameratypeModel) {
@@ -794,7 +795,6 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
                       })),
                   child: _buildTextInput('camera.type', _cameraTypeController, enabled: false))
               : const SizedBox.shrink(),
-          _isWrranty ? _buildTextInput('warranty_duration', _warrantyPeriodController) : const SizedBox.shrink(),
           const SizedBox(height: 10),
         ],
       ),

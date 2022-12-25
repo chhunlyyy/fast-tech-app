@@ -44,6 +44,12 @@ dependencies:
   flutter_local_notifications: ^9.0.3
   html: 
   flutter_html: 
+  pull_to_refresh: ^2.0.0
+  flutter_launcher_icons: "^0.11.0"
+
+  
+  
+
 
 #  *** Firebase ***
   # Flutter plugin for Firebase Cloud Messaging, a cross-platform messaging solution that lets
@@ -66,6 +72,12 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^1.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.jpg"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 flutter:
   assets:

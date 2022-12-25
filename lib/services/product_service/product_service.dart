@@ -173,6 +173,7 @@ class ProductService {
         'isGetElectronicProduct': isGetElectronicProduct,
         'isMinQtyOne': isMinQtyOne,
       };
+
       return await httpApiService.get(HttpApi.API_PRODUCT, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<ProductModel>.from(value.data.map((x) => ProductModel.fromJson(x)));
       });

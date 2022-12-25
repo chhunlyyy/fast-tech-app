@@ -71,8 +71,12 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getAllProducts(true);
+    if (mounted) {
+      _getAllProducts(true);
+    }
   }
+
+  final GlobalKey _easyRefreshKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -91,54 +95,47 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
   }
 
   Widget _buildBody() {
-    return EasyRefresh(
-      header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
-      onLoad: (() async {
-        _getAllProducts(false, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
-      }),
-      onRefresh: () {
-        return Future.delayed(Duration.zero, (() {
-          _getAllProducts(true, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
-        }));
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            key: UniqueKey(),
-            child: !_isElectronic ? _orderAsPackageIcon() : const SizedBox.shrink(),
-          ),
-          SliverAppBar(
-            forceElevated: true,
-            backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
-            elevation: 1,
-            automaticallyImplyLeading: false,
-            pinned: true,
-            floating: true,
-            title: TabBar(
-              indicatorColor: Colors.transparent,
-              onTap: (index) {
-                Future.delayed(const Duration(milliseconds: 100)).whenComplete(() {
-                  setState(() {
-                    _tabIndex = index;
-                    _getAllProducts(true, isMinQtyOne: index == 0 ? 1 : 0);
-                  });
-                });
-              },
-              controller: _tabController,
-              tabs: [
-                _buildTabTitle(true, 0),
-                _buildTabTitle(false, 1),
-              ],
+    return NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              key: UniqueKey(),
+              child: !_isElectronic ? _orderAsPackageIcon() : const SizedBox.shrink(),
             ),
-          ),
-          SliverFillRemaining(
-              child: TabBarView(controller: _tabController, children: [
+            SliverAppBar(
+              forceElevated: true,
+              backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
+              elevation: 1,
+              automaticallyImplyLeading: false,
+              pinned: true,
+              floating: true,
+              title: TabBar(
+                indicatorColor: Colors.transparent,
+                onTap: (index) {
+                  Future.delayed(const Duration(milliseconds: 100)).whenComplete(() {
+                    setState(() {
+                      _tabIndex = index;
+                      _getAllProducts(true, isMinQtyOne: index == 0 ? 1 : 0);
+                    });
+                  });
+                },
+                controller: _tabController,
+                tabs: [
+                  _buildTabTitle(true, 0),
+                  _buildTabTitle(false, 1),
+                ],
+              ),
+            ),
+          ];
+        },
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: TabBarView(controller: _tabController, children: [
             _listAllProductWidget(),
             _listAllProductWidget(),
-          ])),
-        ],
-      ),
-    );
+          ]),
+        ));
   }
 
   Widget _buildTabTitle(bool isFirst, int index) {
@@ -209,6 +206,16 @@ class _ListProductScreenState extends State<ListProductScreen> with TickerProvid
       });
     }
 
-    return content;
+    return EasyRefresh(
+        header: BezierHourGlassHeader(backgroundColor: ColorsConts.primaryColor, color: Colors.white),
+        onLoad: (() async {
+          _getAllProducts(false, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
+        }),
+        onRefresh: () {
+          return Future.delayed(Duration.zero, (() {
+            _getAllProducts(true, isMinQtyOne: _tabIndex == 0 ? 1 : 0);
+          }));
+        },
+        child: content);
   }
 }

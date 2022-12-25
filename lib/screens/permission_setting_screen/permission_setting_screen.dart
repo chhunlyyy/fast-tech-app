@@ -174,7 +174,13 @@ class _PermissionSettingScreenState extends State<PermissionSettingScreen> {
       child: CustomeAnimatedButton(
         hegith: 50,
         title: I18NTranslations.of(context).text(isSuperAdmin ? 'set_to_super_admin' : 'set_to_admin'),
-        onTap: () => _onAddRole(isSuperAdmin),
+        onTap: () {
+          if (_editingController.text != _userModel.phone) {
+            _onAddRole(isSuperAdmin);
+          } else {
+            DialogWidget.show(context, I18NTranslations.of(context).text('phone_already_admin'), dialogType: DialogType.WARNING);
+          }
+        },
         isShowShadow: true,
         backgroundColor: isSuperAdmin ? Colors.green : Colors.blue,
       ),
