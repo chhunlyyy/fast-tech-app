@@ -77,6 +77,16 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       await productService.getCameraTypeModels().then((value) {
         setState(() {
           cameratypeModel = value;
+
+          if (widget.productModel != null) {
+            if (widget.productModel!.isCamera == 1) {
+              for (var element in cameratypeModel) {
+                if (element.id == widget.productModel!.cameraTypeId) {
+                  _seletedCameraType = element;
+                }
+              }
+            }
+          }
         });
       });
     });
@@ -382,7 +392,10 @@ class _AddNewProductScreenState extends State<AddNewProductScreen> {
       _discountController.text = model.discount.toString();
       _priceAfterDiscoutnController.text = model.priceAfterDiscount.toString();
       _minQtyController.text = model.minQty.toString();
-
+      _isCamera = model.isCamera == 1;
+      if (_isCamera) {
+        _cameraTypeController.text = model.cameraType ?? '';
+      }
       //
       if (model.colors.isNotEmpty) {
         _colorName = List.generate(model.colors.length, (index) => TextEditingController());

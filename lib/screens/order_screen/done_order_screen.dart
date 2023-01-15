@@ -48,45 +48,45 @@ class _DoneOrderScreen extends State<DoneOrderScreen> {
   }
 
   void getPackageOrder(int userId) {
-    Future.delayed(Duration.zero, () async {
-      await orderService.getPackageOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
-        _packageOrderModelList.addAll(value);
+    // Future.delayed(Duration.zero, () async {
+    //   await orderService.getPackageOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+    //     _packageOrderModelList.addAll(value);
 
-        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      });
-    });
+    //     Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+    //       setState(() {
+    //         _isLoading = false;
+    //       });
+    //     });
+    //   });
+    // });
   }
 
   void getPickupOrder(int userId) {
-    Future.delayed(Duration.zero, () async {
-      await orderService.getPickupOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
-        _pickupOrderModelList.addAll(value);
+    // Future.delayed(Duration.zero, () async {
+    //   await orderService.getPickupOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+    //     _pickupOrderModelList.addAll(value);
 
-        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      });
-    });
+    //     Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+    //       setState(() {
+    //         _isLoading = false;
+    //       });
+    //     });
+    //   });
+    // });
   }
 
   void getDeliveryOrder(int userId) {
-    Future.delayed(Duration.zero, () async {
-      await orderService.getDeliveryOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
-        _deliveryOrderModelList.addAll(value);
+    // Future.delayed(Duration.zero, () async {
+    //   await orderService.getDeliveryOrder(userId, true, pageIndex: _pageIndex, pageSize: _pagesize).then((value) {
+    //     _deliveryOrderModelList.addAll(value);
 
-        Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      });
-    });
+    //     Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+    //       setState(() {
+    //         _isLoading = false;
+    //       });
+    //     });
+    //   });
+    // });
   }
 
   @override
@@ -334,11 +334,14 @@ class _DoneOrderScreen extends State<DoneOrderScreen> {
         children: [
           Container(
             margin: const EdgeInsets.all(8),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              _displayImageWidget(model),
-              _displayNameWidget(model, isPackageOrder),
-              !isPackageOrder ? _displayPriceWidget(model, (isPickupOrder == false)) : const SizedBox.shrink(),
-            ]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _displayImageWidget(model),
+                Expanded(child: _displayNameWidget(model, isPackageOrder)),
+                !isPackageOrder ? _displayPriceWidget(model, (isPickupOrder == false)) : const SizedBox.shrink(),
+              ],
+            ),
           ),
           Positioned(
             bottom: 0,

@@ -8,10 +8,10 @@ import 'package:fast_tech_app/helper/navigation_helper.dart';
 import 'package:fast_tech_app/helper/token_helper.dart';
 import 'package:fast_tech_app/screens/add_new_product_screen/add_new_product_screen.dart';
 import 'package:fast_tech_app/screens/login_screen/login_screen/login.dart';
-import 'package:fast_tech_app/screens/order_screen/done_order_screen.dart';
 import 'package:fast_tech_app/screens/order_screen/ordering_screen.dart';
 import 'package:fast_tech_app/screens/permission_setting_screen/permission_setting_screen.dart';
 import 'package:fast_tech_app/screens/report/report_screen.dart';
+import 'package:fast_tech_app/screens/report_as_summary/first_report_as_summary.dart';
 import 'package:fast_tech_app/services/user_service/user_service.dart';
 import 'package:fast_tech_app/widget/custome_animated_button.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +43,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
   @override
   Widget build(BuildContext context) {
     _userModel = Provider.of<UserModelProvider>(context).userModel;
-    return TokenHelper.getInstance().isLogedIn() && _userModel != null ? _userWidget() : _notYetLogInWidget();
+    return Material(child: TokenHelper.getInstance().isLogedIn() && _userModel != null ? _userWidget() : _notYetLogInWidget());
   }
 
   Widget _userWidget() {
@@ -54,7 +54,7 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
         const SizedBox(height: 50),
         _line(),
         _buildBotton('is_buying', FontAwesomeIcons.spinner, Colors.blue, () => NavigationHelper.push(context, const OrderingScreen(index: 0))),
-        _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () => NavigationHelper.push(context, const DoneOrderScreen())),
+        // _buildBotton('done_buying', FontAwesomeIcons.check, Colors.green, () => NavigationHelper.push(context, const DoneOrderScreen())),
         context.watch<UserRoleProvider>().isSuperAdmin || context.watch<UserRoleProvider>().isAdmin
             ? _buildBotton('insert_product', FontAwesomeIcons.plus, Colors.brown, () => NavigationHelper.push(context, const AddNewProductScreen()))
             : const SizedBox.shrink(),
@@ -63,6 +63,9 @@ class _UserScreenDashboardComponentState extends State<UserScreenDashboardCompon
             : const SizedBox.shrink(),
         context.watch<UserRoleProvider>().isSuperAdmin
             ? _buildBotton('report', FontAwesomeIcons.bookOpen, Colors.deepOrange, () => NavigationHelper.push(context, const ReportScreen()))
+            : const SizedBox.shrink(),
+        context.watch<UserRoleProvider>().isSuperAdmin
+            ? _buildBotton('report.summary', FontAwesomeIcons.bookOpen, Colors.deepOrange, () => NavigationHelper.push(context, const SummaryReport()))
             : const SizedBox.shrink(),
         const SizedBox(height: 50),
         _logoutButton(),

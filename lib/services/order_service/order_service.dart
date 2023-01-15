@@ -34,12 +34,13 @@ class OrderService {
 
   Future<List<DeliveryOrderModel>> getDeliveryOrder(
     int userID,
-    bool isDone, {
+    bool isDone,
+    int? status, {
     int pageSize = 10,
     int pageIndex = 0,
   }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex, 'status': status};
       return await httpApiService.get(HttpApi.API_DELIVERY_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<DeliveryOrderModel>.from(value.data.map((x) => DeliveryOrderModel.fromJson(x)));
       });
@@ -50,12 +51,13 @@ class OrderService {
 
   Future<List<PackageOrderModel>> getPackageOrder(
     int userID,
-    bool isDone, {
+    bool isDone,
+    int? status, {
     int pageSize = 10,
     int pageIndex = 0,
   }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex, 'status': status};
       return await httpApiService.get(HttpApi.API_PACKAGE_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<PackageOrderModel>.from(value.data.map((x) => PackageOrderModel.fromJson(x)));
       });
@@ -66,12 +68,13 @@ class OrderService {
 
   Future<List<PickupOrderModel>> getPickupOrder(
     int userID,
-    bool isDone, {
+    bool isDone,
+    int? status, {
     int pageSize = 10,
     int pageIndex = 0,
   }) async {
     try {
-      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex};
+      Map<String, dynamic> params = {'user_id': userID, 'is_done': isDone ? 1 : 0, 'pageSize': pageSize, 'pageIndex': pageIndex, 'status': status};
       return await httpApiService.get(HttpApi.API_PICKUP_ORDER, params, Options(headers: HttpConfig.headers)).then((value) {
         return List<PickupOrderModel>.from(value.data.map((x) => PickupOrderModel.fromJson(x)));
       });
